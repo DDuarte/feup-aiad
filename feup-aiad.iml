@@ -7,6 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="org.jfxtras:jfxtras-all:8.0-r2" level="project" />
   </component>
 </module>
 
