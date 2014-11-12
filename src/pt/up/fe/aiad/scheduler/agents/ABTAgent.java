@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.scheduler;
+package pt.up.fe.aiad.scheduler.agents;
 
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -6,7 +6,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 
-public class SchedulerAgent extends Agent {
+public class ABTAgent extends Agent {
 
     @Override
     public void setup() {

@@ -1,6 +1,5 @@
 <component name="libraryTable">
-  <library name="org.jfxtras:jfxtras-all:8.0-r2" type="repository">
-    <properties maven-id="org.jfxtras:jfxtras-all:8.0-r2" />
+  <library name="org.jfxtras:jfxtras-all:8.0-r2">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/jfxtras-all-8.0-r2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jfxtras-agenda-8.0-r2.jar!/" />
