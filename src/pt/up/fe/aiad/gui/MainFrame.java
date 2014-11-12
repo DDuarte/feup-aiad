@@ -58,7 +58,7 @@ public class MainFrame extends Application {
 
     private void createNewEvent() {
         //TODO
-        eventList.add(new ScheduleEvent("Finish AIAD"));
+        eventList.add(new ScheduleEvent("Finish AIAD", 0));
     }
 
     private GridPane getInformationPanel() {

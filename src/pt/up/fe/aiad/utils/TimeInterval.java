@@ -26,9 +26,20 @@ public class TimeInterval {
      * @param endDate Ending date of the interval
      */
     public TimeInterval(Date startDate, Date endDate) {
-        if (startDate.getTime() <= endDate.getTime()) throw new IllegalArgumentException();
-        _startDate = startDate.getTime();
-        _endDate = endDate.getTime();
+        if (startDate.getTime() > endDate.getTime())
+            throw new IllegalArgumentException();
+        _startDate = startDate.getTime() / 1000;
+        _endDate = endDate.getTime() / 1000;
+    }
+
+    public TimeInterval(String string) {
+        String[] parts = string.split(",");
+
+        if (parts.length != 2)
+            throw new IllegalArgumentException();
+
+        _startDate = Long.parseLong(parts[0]);
+        _endDate = Long.parseLong(parts[1]);
     }
 
     /**
@@ -65,6 +76,14 @@ public class TimeInterval {
      */
     @Override
     public String toString() {
-        return "[" + (new Date(_startDate*1000).toString()) + ", " + (new Date(_endDate*1000).toString()) + "]";
+        return toString(false);
+    }
+
+    public String toString(boolean simple) {
+        if (simple) {
+            return _startDate + "," + _endDate;
+        } else {
+            return "[" + (new Date(_startDate*1000).toString()) + ", " + (new Date(_endDate*1000).toString()) + "]";
+        }
     }
 }

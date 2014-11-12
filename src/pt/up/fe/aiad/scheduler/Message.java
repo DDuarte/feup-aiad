@@ -6,11 +6,13 @@ public class Message {
 
     public enum Type {
         IsOkay,
-        NoGood
+        NoGood,
+        AddLink
     }
 
     public static final int[] ACL = {
         ACLMessage.PROPOSE,
-        ACLMessage.REJECT_PROPOSAL
+        ACLMessage.REJECT_PROPOSAL,
+        ACLMessage.SUBSCRIBE
     };
 }
