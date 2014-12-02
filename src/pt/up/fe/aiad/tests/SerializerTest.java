@@ -51,8 +51,6 @@ public class SerializerTest {
 
         String eventsStr = Serializer.EventsAgentViewToJSON(agentView);
 
-        System.out.println(eventsStr);
-
         Map<AID, Map<String, TimeInterval>> agentView2 = Serializer.EventsAgentViewFromJSON(eventsStr);
 
         assertEquals(2*agentView2.get(agent1).get("a").getDuration(),
