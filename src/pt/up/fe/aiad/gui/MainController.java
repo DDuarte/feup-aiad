@@ -3,7 +3,6 @@ package pt.up.fe.aiad.gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -45,12 +44,18 @@ public class MainController {
 
     @FXML
     void startClientButtonOnAction(ActionEvent event) {
-        Parent root;
         try {
-            root = FXMLLoader.load(getClass().getResource("client.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
             Stage stage = new Stage();
             stage.setTitle(_nicknameTextField.getText() + " | iScheduler");
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(loader.load()));
+
+            String addressSplit[] = _addressTextField.getText().split(":");
+
+            ClientController controller = loader.<ClientController>getController();
+            controller.initData(addressSplit[0], Integer.parseInt(addressSplit[1]), _nicknameTextField.getText());
+            controller.start();
+
             stage.show();
 
             _nicknameTextField.setText(getNewNickname());
@@ -61,7 +66,6 @@ public class MainController {
 
     @FXML
     void startServerButtonOnAction(ActionEvent event) {
-        Parent root;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
             Stage stage = new Stage();
@@ -69,8 +73,8 @@ public class MainController {
             stage.setScene(new Scene(loader.load()));
 
             ServerController controller = loader.<ServerController>getController();
-            controller.initData(_showGUICheckBox.isSelected());
-            controller.startServer();
+            controller.initData(stage, _showGUICheckBox.isSelected());
+            controller.start();
 
             stage.show();
 
