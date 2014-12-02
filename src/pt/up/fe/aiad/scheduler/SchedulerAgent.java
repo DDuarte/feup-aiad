@@ -1,21 +1,24 @@
 package pt.up.fe.aiad.scheduler;
 
 
-import jade.core.AID;
-import jade.core.Agent;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
+import jade.core.*;
+import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
-import jade.wrapper.AgentController;
-import jade.wrapper.StaleProxyException;
-import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
+import jade.core.ProfileImpl;
+import jade.util.ExtendedProperties;
+import jade.util.leap.Properties;
+import pt.up.fe.aiad.gui.MainFrame;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class SchedulerAgent extends Agent {
@@ -37,8 +40,12 @@ public class SchedulerAgent extends Agent {
     private Type _agentType;
 
     public static void main(String[] args) {
-        String[] ar = {"-gui"};
-        jade.Boot.main(ar);
+        if (args.length == 0) {
+            String[] ar = {"-container"};
+            jade.Boot.main(ar);
+        }
+        else
+            jade.Boot.main(args);
     }
 
     public SchedulerAgent() {
