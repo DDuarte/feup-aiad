@@ -14,7 +14,6 @@ import static jade.Boot.parseCmdLineArgs;
 public class ServerController {
     private Stage _stage;
     private boolean _showGUI;
-    private AgentContainer _container;
 
     @FXML
     void initialize() {
@@ -31,9 +30,9 @@ public class ServerController {
         System.out.println("ServerController.startServer");
 
         _stage.setOnCloseRequest(event -> {
-            if (_container != null) {
+            if (MainController.container != null) {
                 try {
-                    _container.kill();
+                    MainController.container.kill();
                 } catch (StaleProxyException e) {
                     FXUtils.showExceptionDialog(e);
                 }
@@ -48,6 +47,6 @@ public class ServerController {
         } else
             iae = new ProfileImpl(true);
 
-        _container = Runtime.instance().createMainContainer(iae);
+        MainController.container = Runtime.instance().createMainContainer(iae);
     }
 }

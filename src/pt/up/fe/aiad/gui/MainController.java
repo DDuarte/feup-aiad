@@ -1,5 +1,6 @@
 package pt.up.fe.aiad.gui;
 
+import jade.wrapper.AgentContainer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,8 @@ import pt.up.fe.aiad.utils.StringUtils;
 import java.util.Random;
 
 public class MainController {
+
+    public static AgentContainer container = null;
 
     @FXML
     private TextField _addressTextField;
