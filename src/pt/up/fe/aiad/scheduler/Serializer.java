@@ -1,11 +1,9 @@
 package pt.up.fe.aiad.scheduler;
 
 import jade.core.AID;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,7 +21,7 @@ public class Serializer {
     }
 
     public static Map<String, TimeInterval> EventsFromJSON(String json) {
-        Map<String, TimeInterval> events = new HashMap<String, TimeInterval>();
+        Map<String, TimeInterval> events = new HashMap<>();
 
         JSONObject obj = new JSONObject(json);
         Iterator<String> itr = obj.keys();
@@ -47,7 +45,7 @@ public class Serializer {
     }
 
     public static Map<AID, Map<String, TimeInterval>> EventsAgentViewFromJSON(String json) {
-        Map<AID, Map<String, TimeInterval>> events = new HashMap<AID, Map<String, TimeInterval>>();
+        Map<AID, Map<String, TimeInterval>> events = new HashMap<>();
 
         JSONObject obj = new JSONObject(json);
         Iterator<String> itr = obj.keys();

@@ -70,11 +70,7 @@ public class SchedulerAgent extends Agent {
 
                         for (DFAgentDescription dfd1 : dfds) {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
-                                Platform.runLater(new Runnable() {
-                                    public void run() {
-                                        _allAgents.add(dfd1.getName().getName());
-                                    }
-                                });
+                                Platform.runLater(() -> _allAgents.add(dfd1.getName().getName()));
                                 System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
                             }
                         }

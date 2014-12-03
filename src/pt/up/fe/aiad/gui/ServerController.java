@@ -3,7 +3,6 @@ package pt.up.fe.aiad.gui;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.util.leap.Properties;
-import jade.wrapper.AgentContainer;
 import jade.wrapper.StaleProxyException;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;

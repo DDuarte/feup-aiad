@@ -25,7 +25,7 @@ public class MainFrame extends Application {
         try {
             launch(args);
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }

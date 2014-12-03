@@ -3,7 +3,6 @@ package pt.up.fe.aiad.gui;
 import jade.wrapper.StaleProxyException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.stage.Stage;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.utils.FXUtils;
 
