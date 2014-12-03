@@ -8,6 +8,7 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -69,7 +70,11 @@ public class SchedulerAgent extends Agent {
 
                         for (DFAgentDescription dfd1 : dfds) {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
-                                _allAgents.add(dfd1.getName().getName());
+                                Platform.runLater(new Runnable() {
+                                    public void run() {
+                                        _allAgents.add(dfd1.getName().getName());
+                                    }
+                                });
                                 System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
                             }
                         }
