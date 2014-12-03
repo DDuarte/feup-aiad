@@ -2,23 +2,18 @@ package pt.up.fe.aiad.scheduler;
 
 
 import jade.core.*;
-import jade.core.Runtime;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
-import jade.core.ProfileImpl;
-import jade.util.ExtendedProperties;
-import jade.util.leap.Properties;
-import pt.up.fe.aiad.gui.MainFrame;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 
 public class SchedulerAgent extends Agent {
@@ -35,7 +30,7 @@ public class SchedulerAgent extends Agent {
      */
     public Map<String, ArrayList<AID>> _participants;
 
-    public Set<AID> _allAgents;
+    public ObservableList<String> _allAgents;
 
     private Type _agentType;
 
@@ -48,10 +43,11 @@ public class SchedulerAgent extends Agent {
             jade.Boot.main(args);
     }
 
-    public SchedulerAgent() {
-        _events = new ArrayList<ScheduleEvent>();
-        _participants = new HashMap<String, ArrayList<AID>>();
-        _allAgents = new HashSet<AID>();
+    public SchedulerAgent(Type agentType) {
+        _events = new ArrayList<>();
+        _participants = new HashMap<>();
+        _allAgents = FXCollections.observableArrayList();
+        _agentType = agentType;
     }
 
     @Override
@@ -73,7 +69,7 @@ public class SchedulerAgent extends Agent {
 
                         for (DFAgentDescription dfd1 : dfds) {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
-                                _allAgents.add(dfd1.getName());
+                                _allAgents.add(dfd1.getName().getName());
                                 System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
                             }
                         }
