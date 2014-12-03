@@ -1,5 +1,6 @@
 package pt.up.fe.aiad.gui;
 
+import jade.core.*;
 import jade.wrapper.StaleProxyException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -34,6 +35,15 @@ public class ClientController {
     public void start() {
         System.out.println("ClientController.startServer: " + _nickname + " (" + _addressIp + ":" + _port + ")");
         if (MainController.container != null) {
+            try {
+                MainController.container.acceptNewAgent(_nickname, _agent).start();
+            } catch (StaleProxyException e) {
+                FXUtils.showExceptionDialog(e);
+            }
+        }
+        else {
+            ProfileImpl iae = new ProfileImpl(_addressIp, _port, _addressIp + ":" + Integer.toString(_port) + "/JADE", false);
+            MainController.container = jade.core.Runtime.instance().createAgentContainer(iae);
             try {
                 MainController.container.acceptNewAgent(_nickname, _agent).start();
             } catch (StaleProxyException e) {
