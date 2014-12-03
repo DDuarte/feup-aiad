@@ -1,6 +1,6 @@
 package pt.up.fe.aiad.utils;
 
-import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Represent an interval between two dates
@@ -25,11 +25,11 @@ public class TimeInterval {
      * @param startDate Starting date of the interval
      * @param endDate Ending date of the interval
      */
-    public TimeInterval(Date startDate, Date endDate) {
-        if (startDate.getTime() > endDate.getTime())
+    public TimeInterval(Calendar startDate, Calendar endDate) {
+        if (startDate.getTimeInMillis() > endDate.getTimeInMillis())
             throw new IllegalArgumentException();
-        _startDate = startDate.getTime() / 1000;
-        _endDate = endDate.getTime() / 1000;
+        _startDate = startDate.getTimeInMillis() / 1000;
+        _endDate = endDate.getTimeInMillis() / 1000;
     }
 
     public TimeInterval(String string) {
@@ -80,10 +80,14 @@ public class TimeInterval {
     }
 
     public String toString(boolean simple) {
+        Calendar sd = Calendar.getInstance();
+        Calendar ed = Calendar.getInstance();
+        sd.setTimeInMillis(_startDate*1000);
+        ed.setTimeInMillis(_endDate*1000);
         if (simple) {
             return _startDate + "," + _endDate;
         } else {
-            return "[" + (new Date(_startDate*1000).toString()) + ", " + (new Date(_endDate*1000).toString()) + "]";
+            return "[" + (sd.getTime().toString()) + ", " + (sd.getTime().toString()) + "]";
         }
     }
 }
