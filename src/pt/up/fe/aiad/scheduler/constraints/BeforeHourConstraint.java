@@ -8,9 +8,9 @@ public class BeforeHourConstraint implements ScheduleConstraint{
     private final int _hour;
     private final int _minute;
 
-    public BeforeHourConstraint(Calendar thresholdPeriod) {
-        _hour = thresholdPeriod.get(Calendar.HOUR_OF_DAY);
-        _minute = thresholdPeriod.get(Calendar.MINUTE);
+    public BeforeHourConstraint(int hour, int minute) {
+        _hour = hour;
+        _minute = minute;
     }
 
     @Override
