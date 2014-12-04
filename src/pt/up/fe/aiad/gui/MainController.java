@@ -51,7 +51,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
             Stage stage = new Stage();
             stage.setTitle(_nicknameTextField.getText() + " | iScheduler");
-            stage.setScene(new Scene(loader.load()));
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            stage.setScene(scene);
 
             String addressSplit[] = _addressTextField.getText().split(":");
 
@@ -60,6 +62,8 @@ public class MainController {
             controller.start();
 
             stage.show();
+
+            stage.setOnHiding(eventHiding -> controller.stop());
 
             _nicknameTextField.setText(getNewNickname());
         } catch (Exception e) {
@@ -73,7 +77,9 @@ public class MainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Server | iScheduler");
-            stage.setScene(new Scene(loader.load()));
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            stage.setScene(scene);
 
             ServerController controller = loader.<ServerController>getController();
             controller.initData(stage, _showGUICheckBox.isSelected());

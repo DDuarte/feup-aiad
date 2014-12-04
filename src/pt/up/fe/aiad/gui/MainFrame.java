@@ -14,8 +14,13 @@ public class MainFrame extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
             primaryStage.setTitle("iScheduler");
-            primaryStage.setScene(new Scene(root));
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+
+            primaryStage.setScene(scene);
             primaryStage.show();
+
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
         }

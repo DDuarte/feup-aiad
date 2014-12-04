@@ -1,7 +1,8 @@
 package pt.up.fe.aiad.scheduler;
 
 
-import jade.core.*;
+import jade.core.AID;
+import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -11,10 +12,9 @@ import jade.proto.SubscriptionInitiator;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.controlsfx.control.Notifications;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SchedulerAgent extends Agent {
@@ -25,13 +25,17 @@ public class SchedulerAgent extends Agent {
     /**
      * List of all the events this agent is participating in
      */
-    public ArrayList<ScheduleEvent> _events;
+    public ArrayList<ScheduleEvent> _events = new ArrayList<>();
     /**
      * For each of the events this agent is participating in, lists other participants
      */
-    public Map<String, ArrayList<AID>> _participants;
+    public Map<String, ArrayList<AID>> _participants = new HashMap<>();
 
-    public ObservableList<String> _allAgents;
+    /**
+     * All agent names excluding self
+     */
+    public ObservableList<String> _otherAgents = FXCollections.observableArrayList();
+    public Set<AID> _allAgents = new TreeSet<>();
 
     private Type _agentType;
 
@@ -45,9 +49,6 @@ public class SchedulerAgent extends Agent {
     }
 
     public SchedulerAgent(Type agentType) {
-        _events = new ArrayList<>();
-        _participants = new HashMap<>();
-        _allAgents = FXCollections.observableArrayList();
         _agentType = agentType;
     }
 
@@ -70,8 +71,12 @@ public class SchedulerAgent extends Agent {
 
                         for (DFAgentDescription dfd1 : dfds) {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
-                                Platform.runLater(() -> _allAgents.add(dfd1.getName().getName()));
-                                System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
+                                if (dfd1.getAllServices().hasNext()) {
+                                    addAgent(dfd1.getName());
+                                    System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
+                                } else {
+                                    removeAgent(dfd1.getName());
+                                }
                             }
                         }
                     } catch (FIPAException fe) {
@@ -85,6 +90,7 @@ public class SchedulerAgent extends Agent {
             fe.printStackTrace();
         }
 
+        _allAgents.add(getAID()); // add self
 
         /* This must be done only after SETUP phase ends
         switch (_agentType) {
@@ -97,6 +103,34 @@ public class SchedulerAgent extends Agent {
                 break;
         }
         */
+    }
+
+    private void addAgent(AID agent) {
+        Platform.runLater(() -> {
+            _otherAgents.add(agent.getName());
+            Notifications.create()
+                    .title("Agent Joined")
+                    .text(agent.getName())
+                    .darkStyle()
+                    .showInformation();
+
+        });
+
+        _allAgents.add(agent);
+    }
+
+    private void removeAgent(AID agent) {
+        Platform.runLater(() -> {
+            _otherAgents.remove(agent.getName());
+            Notifications.create()
+                    .title("Agent Left")
+                    .text(agent.getName())
+                    .darkStyle()
+                    .showWarning();
+
+        });
+
+        _allAgents.remove(agent);
     }
 
     @Override

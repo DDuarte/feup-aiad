@@ -1,6 +1,7 @@
 package pt.up.fe.aiad.gui;
 
 import jade.core.*;
+import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -12,6 +13,7 @@ public class ClientController {
     private int _port;
     private String _nickname;
     private SchedulerAgent _agent;
+    private AgentController _agentController;
 
     @FXML
     private ListView<String> _allAgents;
@@ -28,15 +30,15 @@ public class ClientController {
         _port = port;
         _nickname = nickname;
         _agent = new SchedulerAgent(SchedulerAgent.Type.ABT); //TODO add type
-        _allAgents.setItems(_agent._allAgents);
+        _allAgents.setItems(_agent._otherAgents);
     }
-
 
     public void start() {
         System.out.println("ClientController.startServer: " + _nickname + " (" + _addressIp + ":" + _port + ")");
         if (MainController.container != null) {
             try {
-                MainController.container.acceptNewAgent(_nickname, _agent).start();
+                _agentController = MainController.container.acceptNewAgent(_nickname, _agent);
+                _agentController.start();
             } catch (StaleProxyException e) {
                 FXUtils.showExceptionDialog(e);
             }
@@ -45,7 +47,18 @@ public class ClientController {
             ProfileImpl iae = new ProfileImpl(_addressIp, _port, _addressIp + ":" + Integer.toString(_port) + "/JADE", false);
             MainController.container = jade.core.Runtime.instance().createAgentContainer(iae);
             try {
-                MainController.container.acceptNewAgent(_nickname, _agent).start();
+                _agentController = MainController.container.acceptNewAgent(_nickname, _agent);
+                _agentController.start();
+            } catch (StaleProxyException e) {
+                FXUtils.showExceptionDialog(e);
+            }
+        }
+    }
+
+    public void stop() {
+        if (_agentController != null) {
+            try {
+                _agentController.kill();
             } catch (StaleProxyException e) {
                 FXUtils.showExceptionDialog(e);
             }
