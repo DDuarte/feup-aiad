@@ -26,16 +26,18 @@ public class SchedulerAgent extends Agent {
      * List of all the events this agent is participating in
      */
     public ObservableList<ScheduleEvent> _events = FXCollections.observableArrayList();
+
     /**
-     * For each of the events this agent is participating in, lists other participants
+     * List of all the events this agent has been invited to attend
      */
-    public Map<String, ArrayList<AID>> _participants = new HashMap<>();
+    public ObservableList<ScheduleEvent> _invitedTo = FXCollections.observableArrayList();
 
     /**
      * All agent names excluding self
      */
-    public ObservableList<String> _otherAgents = FXCollections.observableArrayList();
-    public Set<AID> _allAgents = new TreeSet<>();
+    public ObservableList<String> otherAgents = FXCollections.observableArrayList();
+    public Set<AID> allAgents = new TreeSet<>();
+    public HashMap<String, AID> agentNameToAid = new HashMap<>();
 
     private Type _agentType;
 
@@ -90,7 +92,7 @@ public class SchedulerAgent extends Agent {
             Platform.runLater(fe::printStackTrace);
         }
 
-        _allAgents.add(getAID()); // add self
+        allAgents.add(getAID()); // add self
 
         /* This must be done only after SETUP phase ends
         switch (_agentType) {
@@ -109,9 +111,13 @@ public class SchedulerAgent extends Agent {
         Platform.runLater(() -> _events.add(ev));
     }
 
+    public void dispatchInvitations(ScheduleEvent ev) {
+        Platform.runLater(() -> _invitedTo.add(ev));
+    }
+
     private void addAgent(AID agent) {
         Platform.runLater(() -> {
-            _otherAgents.add(agent.getName());
+            otherAgents.add(agent.getName());
             Notifications.create()
                     .title("Agent Joined")
                     .text(agent.getName())
@@ -120,12 +126,14 @@ public class SchedulerAgent extends Agent {
 
         });
 
-        _allAgents.add(agent);
+        allAgents.add(agent);
+        agentNameToAid.put(agent.getName(), agent);
     }
+
 
     private void removeAgent(AID agent) {
         Platform.runLater(() -> {
-            _otherAgents.remove(agent.getName());
+            otherAgents.remove(agent.getName());
             Notifications.create()
                     .title("Agent Left")
                     .text(agent.getName())
@@ -134,7 +142,14 @@ public class SchedulerAgent extends Agent {
 
         });
 
-        _allAgents.remove(agent);
+        allAgents.remove(agent);
+        agentNameToAid.remove(agent.getName());
+        for (ScheduleEvent e : _events) {
+            e._participants.remove(agent);
+        }
+        for (ScheduleEvent e : _invitedTo) {
+            e._participants.remove(agent);
+        }
     }
 
     @Override

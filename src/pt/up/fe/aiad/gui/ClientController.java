@@ -27,6 +27,8 @@ public class ClientController {
     @FXML
     private ListView<ScheduleEvent> _eventsJoined;
     @FXML
+    private ListView<ScheduleEvent> _eventsInvitedTo;
+    @FXML
     private ListView<String> _allAgents;
     @FXML
     void initialize() {
@@ -39,8 +41,9 @@ public class ClientController {
         _port = port;
         _nickname = nickname;
         _agent = new SchedulerAgent(algorithm);
-        _allAgents.setItems(_agent._otherAgents);
+        _allAgents.setItems(_agent.otherAgents);
         _eventsJoined.setItems(_agent._events);
+        _eventsInvitedTo.setItems(_agent._invitedTo);
     }
 
     public void start() {
@@ -87,11 +90,9 @@ public class ClientController {
 
 
             CreateEventController controller = loader.<CreateEventController>getController();
-            controller.initData();
+            controller.initData(_agent, stage);
 
             stage.show();
-
-            _agent.addEvent(new ScheduleEvent("Cenas e tal", 30*60*2));
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
         }

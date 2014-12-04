@@ -6,13 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.08793969849246232" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.CreateEventController">
+<SplitPane dividerPositions="0.8919597989949749" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.CreateEventController">
   <items>
-      <Pane prefHeight="173.0" prefWidth="598.0">
-         <children>
-            <Text layoutX="220.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create New Event" textAlignment="CENTER" wrappingWidth="133.13671875" />
-         </children>
-      </Pane>
       <VBox prefHeight="210.0" prefWidth="598.0">
          <children>
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="306.0" BorderPane.alignment="CENTER">
@@ -22,7 +17,7 @@
                         <Insets left="20.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField prefHeight="25.0" prefWidth="141.0" promptText="Event Name" HBox.hgrow="ALWAYS">
+                  <TextField fx:id="_eventName" prefHeight="25.0" prefWidth="141.0" promptText="Event Name" HBox.hgrow="ALWAYS">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -42,15 +37,94 @@
                         <Insets left="20.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField prefHeight="25.0" prefWidth="48.0" promptText="hours" />
-                  <Label prefHeight="25.0" prefWidth="11.0" text="h" />
+                  <TextField fx:id="_hours" prefHeight="25.0" prefWidth="48.0" promptText="hours" />
+                  <Label prefHeight="25.0" prefWidth="11.0" text="h">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Label>
                   <ChoiceBox fx:id="_minutes" prefHeight="25.0" prefWidth="53.0" />
+                  <Label prefHeight="25.0" prefWidth="23.0" text="min">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
             </HBox>
+            <Label text="Participants (besides you):">
+               <VBox.margin>
+                  <Insets left="20.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <ListView fx:id="_otherAgents" prefHeight="186.0" prefWidth="558.0">
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </VBox.margin>
+            </ListView>
+            <HBox prefHeight="57.0" prefWidth="598.0">
+               <children>
+                  <Label text="Minimum Date:">
+                     <HBox.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="_minDate" />
+                  <ChoiceBox fx:id="_minHours" prefHeight="25.0" prefWidth="54.0">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ChoiceBox>
+                  <Label prefHeight="24.0" prefWidth="11.0" text="h">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ChoiceBox fx:id="_minMinutes" prefHeight="25.0" prefWidth="47.0" />
+                  <Label prefHeight="25.0" prefWidth="40.0" text="min">
+                     <HBox.margin>
+                        <Insets left="3.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="62.0" prefWidth="598.0">
+               <children>
+                  <Label text="Maximum Date:">
+                     <HBox.margin>
+                        <Insets left="20.0" right="8.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="_maxDate" />
+                  <ChoiceBox fx:id="_maxHours" prefHeight="25.0" prefWidth="54.0">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </ChoiceBox>
+                  <Label prefHeight="24.0" prefWidth="11.0" text="h">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ChoiceBox fx:id="_maxMinutes" prefHeight="25.0" prefWidth="47.0" />
+                  <Label prefHeight="25.0" prefWidth="40.0" text="min">
+                     <HBox.margin>
+                        <Insets left="3.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
          </children>
       </VBox>
+      <Pane prefHeight="316.0" prefWidth="598.0">
+         <children>
+            <Button fx:id="_confirmButton" layoutX="459.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveEvent" prefHeight="30.0" prefWidth="48.0" text="Save" />
+            <Button layoutX="521.0" layoutY="4.0" mnemonicParsing="false" onAction="#cancelCreation" prefHeight="30.0" prefWidth="63.0" text="Cancel" />
+         </children>
+      </Pane>
   </items>
 </SplitPane>
