@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="172.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.MainController">
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="231.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.MainController">
    <items>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule Aligment" textAlignment="CENTER">
          <font>
@@ -55,6 +55,16 @@
                                        </HBox.margin>
                                     </Label>
                                     <TextField fx:id="_nicknameTextField" prefHeight="25.0" prefWidth="227.0" promptText="nickname" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="30.0" prefWidth="306.0">
+                                 <children>
+                                    <Label text="Algorithm:" HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets right="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <ChoiceBox fx:id="_algorithmChoiceBox" prefHeight="25.0" prefWidth="243.0" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>

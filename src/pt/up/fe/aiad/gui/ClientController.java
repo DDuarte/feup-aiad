@@ -18,18 +18,17 @@ public class ClientController {
     @FXML
     private ListView<String> _allAgents;
 
-
     @FXML
     void initialize() {
         System.out.println("ClientController.init");
     }
 
-    public void initData(String addressIp, int port, String nickname) {
+    public void initData(String addressIp, int port, String nickname, SchedulerAgent.Type algorithm) {
         System.out.println("ClientController.initData");
         _addressIp = addressIp;
         _port = port;
         _nickname = nickname;
-        _agent = new SchedulerAgent(SchedulerAgent.Type.ABT); //TODO add type
+        _agent = new SchedulerAgent(algorithm);
         _allAgents.setItems(_agent._otherAgents);
     }
 
