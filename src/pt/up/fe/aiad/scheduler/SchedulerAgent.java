@@ -25,7 +25,7 @@ public class SchedulerAgent extends Agent {
     /**
      * List of all the events this agent is participating in
      */
-    public ArrayList<ScheduleEvent> _events = new ArrayList<>();
+    public ObservableList<ScheduleEvent> _events = FXCollections.observableArrayList();
     /**
      * For each of the events this agent is participating in, lists other participants
      */
@@ -103,6 +103,10 @@ public class SchedulerAgent extends Agent {
                 break;
         }
         */
+    }
+
+    public void addEvent (ScheduleEvent ev) {
+        Platform.runLater(() -> _events.add(ev));
     }
 
     private void addAgent(AID agent) {

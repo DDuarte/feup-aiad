@@ -31,8 +31,8 @@
             <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Events" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                        <ListView layoutX="14.0" layoutY="50.0" prefHeight="425.0" prefWidth="408.0" />
-                        <Button layoutX="14.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Create New" />
+                        <ListView fx:id="_eventsJoined" layoutX="14.0" layoutY="50.0" prefHeight="425.0" prefWidth="408.0" />
+                        <Button fx:id="_createNewEventButton" layoutX="14.0" layoutY="500.0" mnemonicParsing="false" onAction="#createNewEventOnAction" prefHeight="31.0" prefWidth="99.0" text="Create New" />
                         <Button layoutX="166.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Edit Event" />
                         <Button layoutX="317.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Leave Event" />
               </children>

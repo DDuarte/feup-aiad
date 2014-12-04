@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class ScheduleEvent {
     private String _name;
-    private final long _duration;
+    private final long _duration; /**< duration in seconds */
     // private ArrayList<AID> _participants;
     private ArrayList<TimeInterval> _availableIntervals; // Domain
 
