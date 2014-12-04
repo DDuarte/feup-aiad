@@ -19,6 +19,8 @@ import java.util.Random;
 
 public class MainController {
 
+    private static Random r = new Random();
+
     public static AgentContainer container = null;
 
     @FXML
@@ -48,7 +50,7 @@ public class MainController {
     }
 
     private static String getNewNickname() {
-        return _exampleNicknames[new Random().nextInt(_exampleNicknames.length)];
+        return _exampleNicknames[r.nextInt(_exampleNicknames.length)];
     }
 
     @FXML

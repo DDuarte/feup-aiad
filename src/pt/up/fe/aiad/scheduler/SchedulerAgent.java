@@ -54,7 +54,7 @@ public class SchedulerAgent extends Agent {
 
     @Override
     public void setup() {
-        System.out.println("Hello. I, agent " + getAID().getName() + " am alive now.");
+        Platform.runLater(() -> System.out.println("Hello. I, agent " + getAID().getName() + " am alive now."));
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -73,21 +73,21 @@ public class SchedulerAgent extends Agent {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
                                 if (dfd1.getAllServices().hasNext()) {
                                     addAgent(dfd1.getName());
-                                    System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
+                                    Platform.runLater(() -> System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + "."));
                                 } else {
                                     removeAgent(dfd1.getName());
                                 }
                             }
                         }
                     } catch (FIPAException fe) {
-                        fe.printStackTrace();
+                        Platform.runLater(fe::printStackTrace);
                     }
                 }
             });
 
             DFService.register(this, dfd);
         } catch (FIPAException fe) {
-            fe.printStackTrace();
+            Platform.runLater(fe::printStackTrace);
         }
 
         _allAgents.add(getAID()); // add self
@@ -139,11 +139,11 @@ public class SchedulerAgent extends Agent {
         try {
             DFService.deregister(this);
         } catch (FIPAException fe) {
-            fe.printStackTrace();
+            Platform.runLater(fe::printStackTrace);
         }
         //TODO Close the GUI if necessary
 
         // Printout a dismissal message
-        System.out.println("Agent " + getAID().getName() + " terminating.");
+        Platform.runLater(() -> System.out.println("Agent " + getAID().getName() + " terminating."));
     }
 }
