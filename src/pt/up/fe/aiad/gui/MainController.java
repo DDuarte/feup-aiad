@@ -37,7 +37,7 @@ public class MainController {
         _nicknameTextField.textProperty().addListener((observable, oldValue, newValue) -> validateClientInput());
         _addressTextField.textProperty().addListener((observable, oldValue, newValue) -> validateClientInput());
 
-        _addressTextField.setText("127.0.0.1:1199");
+        _addressTextField.setText("127.0.0.1:1099");
         _nicknameTextField.setText(getNewNickname());
     }
 
