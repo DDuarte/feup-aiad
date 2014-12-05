@@ -8,7 +8,7 @@ import java.util.Calendar;
 public class EarlierThanConstraint implements  ScheduleConstraint {
     private final long _threshold;
 
-    ///THRESHOLD must be in seconds (i.e. getTime/1000)
+    // THRESHOLD must be in seconds (i.e. getTime/1000)
     public EarlierThanConstraint(long threshold) {
         _threshold = threshold;
     }
