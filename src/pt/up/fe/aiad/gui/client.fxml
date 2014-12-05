@@ -10,7 +10,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.ClientController">
   <children>
-    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.2505567928730512, 0.5690423162583519" focusTraversable="true" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane>
           <children>
@@ -26,15 +26,14 @@
                   <Button layoutX="11.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="200.0" text="Invite to Event" />
           </children>
         </AnchorPane>
-        <ScrollPane>
+        <ScrollPane prefHeight="567.0" prefWidth="438.0">
           <content>
-            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="280.0">
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Events" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                        <ListView fx:id="_eventsJoined" layoutX="14.0" layoutY="50.0" prefHeight="425.0" prefWidth="408.0" />
-                        <Button fx:id="_createNewEventButton" layoutX="14.0" layoutY="500.0" mnemonicParsing="false" onAction="#createNewEventOnAction" prefHeight="31.0" prefWidth="99.0" text="Create New" />
-                        <Button layoutX="166.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Edit Event" />
-                        <Button layoutX="317.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Leave Event" />
+                        <ListView fx:id="_eventsJoined" layoutX="14.0" layoutY="50.0" prefHeight="425.0" prefWidth="251.0" />
+                        <Button layoutX="17.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Edit Event" />
+                        <Button layoutX="166.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Leave Event" />
               </children>
             </AnchorPane>
           </content>
@@ -42,9 +41,10 @@
         <AnchorPane>
           <children>
             <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Invited To" textAlignment="CENTER" textFill="$x2" wrapText="false" />
-                  <ListView fx:id="_eventsInvitedTo" layoutX="11.0" layoutY="48.0" prefHeight="426.0" prefWidth="200.0" />
-                  <Button layoutX="14.0" layoutY="501.0" mnemonicParsing="false" onAction="#acceptInvitation" prefHeight="31.0" prefWidth="79.0" text="Accept" />
-                  <Button layoutX="128.0" layoutY="501.0" mnemonicParsing="false" onAction="#rejectInvitation" prefHeight="31.0" prefWidth="79.0" text="Decline" />
+                  <ListView fx:id="_eventsInvitedTo" layoutX="11.0" layoutY="48.0" prefHeight="426.0" prefWidth="356.0" />
+                  <Button fx:id="_createNewEventButton" layoutX="11.0" layoutY="501.0" mnemonicParsing="false" onAction="#createNewEventOnAction" prefHeight="31.0" prefWidth="99.0" text="Create New" />
+                  <Button layoutX="192.0" layoutY="501.0" mnemonicParsing="false" onAction="#acceptInvitation" prefHeight="31.0" prefWidth="79.0" text="Accept" />
+                  <Button layoutX="288.0" layoutY="501.0" mnemonicParsing="false" onAction="#rejectInvitation" prefHeight="31.0" prefWidth="79.0" text="Decline" />
           </children>
         </AnchorPane>
       </items>
