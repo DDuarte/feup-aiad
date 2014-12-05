@@ -51,9 +51,9 @@ public class EditEventController {
     private TimeInterval _maxBounds;
 
     public void initData(final Stage stage, ScheduleEvent ev) {
-        _domainView.setItems(_domain);
+        _domainView.setItems(_domain.sorted());
         _constraintView.setItems(_constraints);
-        _participantsView.setItems(_participants);
+        _participantsView.setItems(_participants.sorted());
         _stage = stage;
 
         if (ev.isInitialized()) {
