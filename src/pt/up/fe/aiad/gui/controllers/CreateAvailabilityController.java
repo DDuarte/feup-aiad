@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.time.LocalDate;
 import java.util.Calendar;
 
 public class CreateAvailabilityController {
@@ -64,17 +63,10 @@ public class CreateAvailabilityController {
     public void validateEventData() {
         _doneButton.setDisable(true);
 
-        LocalDate minLd = _minDate.getValue();
-        if (minLd == null)
+        Calendar minC = TimeInterval.calendarFromLocalDate(_minDate.getValue(), _minHours.getValue(), _minMinutes.getValue());
+        Calendar maxC = TimeInterval.calendarFromLocalDate(_maxDate.getValue(), _maxHours.getValue(), _maxMinutes.getValue());
+        if (minC == null || maxC == null)
             return;
-        Calendar minC =  Calendar.getInstance();
-        minC.set(minLd.getYear(), minLd.getMonthValue()-1, minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
-
-        LocalDate maxLd = _maxDate.getValue();
-        if (maxLd == null)
-            return;
-        Calendar maxC =  Calendar.getInstance();
-        maxC.set(maxLd.getYear(), maxLd.getMonthValue()-1, maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
 
         TimeInterval ti;
         try {
@@ -104,17 +96,10 @@ public class CreateAvailabilityController {
 
     @FXML
     public void saveAvailability() {
-        LocalDate minLd = _minDate.getValue();
-        if (minLd == null)
+        Calendar minC = TimeInterval.calendarFromLocalDate(_minDate.getValue(), _minHours.getValue(), _minMinutes.getValue());
+        Calendar maxC = TimeInterval.calendarFromLocalDate(_maxDate.getValue(), _maxHours.getValue(), _maxMinutes.getValue());
+        if (minC == null || maxC == null)
             return;
-        Calendar minC =  Calendar.getInstance();
-        minC.set(minLd.getYear(), minLd.getMonthValue()-1, minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
-
-        LocalDate maxLd = _maxDate.getValue();
-        if (maxLd == null)
-            return;
-        Calendar maxC =  Calendar.getInstance();
-        maxC.set(maxLd.getYear(), maxLd.getMonthValue()-1, maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
 
         TimeInterval ti = new TimeInterval(minC, maxC);
 

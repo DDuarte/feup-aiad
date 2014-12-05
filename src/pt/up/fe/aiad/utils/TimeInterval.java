@@ -1,8 +1,7 @@
 package pt.up.fe.aiad.utils;
 
-import javafx.application.Platform;
-
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 
 /**
@@ -111,5 +110,14 @@ public class TimeInterval implements Comparable<TimeInterval> {
         Long sd = _startDate;
         Long otherSd = o.getStartDate();
         return sd.compareTo(otherSd);
+    }
+
+    public static Calendar calendarFromLocalDate(LocalDate lc, int hours, int minutes) {
+        if (lc == null)
+            return null;
+
+        Calendar c = Calendar.getInstance();
+        c.set(lc.getYear(), lc.getMonthValue()-1, lc.getDayOfMonth(), hours, minutes, 0);
+        return c;
     }
 }

@@ -126,6 +126,7 @@ public class ClientController {
     }
 
 
+    @SuppressWarnings("deprecation")
     @FXML
     void rejectInvitation(ActionEvent event) {
 

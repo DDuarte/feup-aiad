@@ -132,13 +132,10 @@ public class CreateEventController {
 
         agents.addAll(_otherAgents.getSelectionModel().getSelectedItems().stream().map(_agent.agentNameToAid::get).collect(Collectors.toList()));
 
-        LocalDate minLd = _minDate.getValue();
-        Calendar minC =  Calendar.getInstance();
-        minC.set(minLd.getYear(), minLd.getMonthValue()-1, minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
-
-        LocalDate maxLd = _maxDate.getValue();
-        Calendar maxC =  Calendar.getInstance();
-        maxC.set(maxLd.getYear(), maxLd.getMonthValue()-1, maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
+        Calendar minC = TimeInterval.calendarFromLocalDate(_minDate.getValue(), _minHours.getValue(), _minMinutes.getValue());
+        Calendar maxC = TimeInterval.calendarFromLocalDate(_maxDate.getValue(), _maxHours.getValue(), _maxMinutes.getValue());
+        if (minC == null || maxC == null)
+            return;
 
         TimeInterval ti = new TimeInterval(minC, maxC);
 
