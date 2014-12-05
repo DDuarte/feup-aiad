@@ -97,7 +97,11 @@ public class MainController {
             stage.show();
 
             _startServerButton.setDisable(true);
-            stage.setOnHiding(eventHiding -> _startServerButton.setDisable(false));
+            _addressTextField.setDisable(true);
+            stage.setOnHiding(eventHiding -> {
+                _startServerButton.setDisable(false);
+                _addressTextField.setDisable(false);
+            });
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
         }
