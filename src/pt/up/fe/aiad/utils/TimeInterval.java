@@ -2,6 +2,7 @@ package pt.up.fe.aiad.utils;
 
 import javafx.application.Platform;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -99,7 +100,8 @@ public class TimeInterval implements Comparable<TimeInterval> {
         if (simple) {
             return _startDate + "," + _endDate;
         } else {
-            return "[" + (sd.getTime().toString()) + ", " + (ed.getTime().toString()) + "]";
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            return "[" + (dateFormat.format(sd.getTime())) + ", " + (dateFormat.format(ed.getTime())) + "]";
         }
     }
 
