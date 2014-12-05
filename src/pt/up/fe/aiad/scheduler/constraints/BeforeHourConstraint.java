@@ -22,6 +22,6 @@ public class BeforeHourConstraint implements ScheduleConstraint{
 
     @Override
     public String toString() {
-        return "Event must take place before " + Integer.toString(_hour) + "h" + Integer.toString(_minute);
+        return "Event should take place before " + Integer.toString(_hour) + "h" + Integer.toString(_minute);
     }
 }

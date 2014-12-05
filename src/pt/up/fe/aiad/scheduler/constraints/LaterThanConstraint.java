@@ -21,6 +21,6 @@ public class LaterThanConstraint implements  ScheduleConstraint {
     public String toString() {
         Calendar c1 = Calendar.getInstance();
         c1.setTimeInMillis(_threshold*1000);
-        return "Event must take place after " + c1.getTime().toString();
+        return "Event should take place after " + c1.getTime().toString();
     }
 }

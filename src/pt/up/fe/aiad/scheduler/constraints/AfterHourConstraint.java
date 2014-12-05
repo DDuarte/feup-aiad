@@ -23,6 +23,6 @@ public class AfterHourConstraint implements ScheduleConstraint{
 
     @Override
     public String toString() {
-        return "Event must take place after " + Integer.toString(_hour) + "h" + Integer.toString(_minute);
+        return "Event should take place after " + Integer.toString(_hour) + "h" + Integer.toString(_minute);
     }
 }
