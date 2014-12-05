@@ -1,14 +1,44 @@
 package pt.up.fe.aiad.scheduler;
 
 import jade.core.AID;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Serializer {
+
+    public static String EventProposalToJSON(ScheduleEvent ev) {
+        JSONObject obj = new JSONObject();
+        obj.put("name", ev.getName());
+        obj.put("duration", ev.getDuration());
+        obj.put("maxbounds", ev.getMaxBounds().toString(true));
+
+        ArrayList<String> partNames = new ArrayList<>();
+        for (AID a : ev._participants) partNames.add(a.getName());
+
+        obj.put("participants", partNames);
+
+        return obj.toString();
+    }
+
+    public static ScheduleEvent EventProposalFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+
+        JSONArray names = obj.getJSONArray("participants");
+
+        ArrayList<AID> n = new ArrayList<>();
+        for (int i=0; i < names.length(); i++) {
+            n.add(new AID(names.getString(i), true));
+        }
+
+        return new ScheduleEvent(obj.getString("name"), obj.getLong("duration"), n, new TimeInterval(obj.getString("maxbounds")));
+    }
                                     /* eventName - timeInterval */
     public static String EventsToJSON(Map<String, TimeInterval> events) {
         JSONObject obj = new JSONObject();

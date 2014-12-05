@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.controlsfx.control.Notifications;
+import pt.up.fe.aiad.scheduler.agentbehaviours.SetupBehaviour;
 
 import java.util.*;
 
@@ -45,8 +46,7 @@ public class SchedulerAgent extends Agent {
         if (args.length == 0) {
             String[] ar = {"-container"};
             jade.Boot.main(ar);
-        }
-        else
+        } else
             jade.Boot.main(args);
     }
 
@@ -56,7 +56,11 @@ public class SchedulerAgent extends Agent {
 
     @Override
     public void setup() {
-        Platform.runLater(() -> System.out.println("Hello. I, agent " + getAID().getName() + " am alive now."));
+        try {
+            Platform.runLater(() -> System.out.println("Hello. I, agent " + getAID().getName() + " am alive now."));
+        } catch (Exception e) {
+            System.out.println("Hello. I, agent " + getAID().getName() + " am alive now.");
+        }
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -75,7 +79,12 @@ public class SchedulerAgent extends Agent {
                             if (!dfd1.getName().toString().equals(getAID().toString())) {
                                 if (dfd1.getAllServices().hasNext()) {
                                     addAgent(dfd1.getName());
-                                    Platform.runLater(() -> System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + "."));
+                                    try {
+                                        Platform.runLater(() -> System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + "."));
+                                    } catch (Exception e) {
+                                        System.out.println("I, agent " + getAID().getName() + ", have found agent " + dfd1.getName().getName() + ".");
+                                    }
+
                                 } else {
                                     removeAgent(dfd1.getName());
                                 }
@@ -94,6 +103,8 @@ public class SchedulerAgent extends Agent {
 
         allAgents.add(getAID()); // add self
 
+        addBehaviour(new SetupBehaviour());
+
         /* This must be done only after SETUP phase ends
         switch (_agentType) {
             case ABT:
@@ -107,12 +118,21 @@ public class SchedulerAgent extends Agent {
         */
     }
 
-    public void addEvent (ScheduleEvent ev) {
+    public void addEvent(ScheduleEvent ev) {
         Platform.runLater(() -> _events.add(ev));
     }
 
     public void dispatchInvitations(ScheduleEvent ev) {
         Platform.runLater(() -> _invitedTo.add(ev));
+
+        String json = Serializer.EventProposalToJSON(ev);
+
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+        ev._participants.stream().filter(a -> !a.getName().equals(getAID().getName())).forEach(msg::addReceiver);
+
+        msg.setContent("INVITATION-" + json);
+        msg.setConversationId("schedule-align");
+        send(msg);
     }
 
     private void addAgent(AID agent) {
@@ -163,6 +183,10 @@ public class SchedulerAgent extends Agent {
         //TODO Close the GUI if necessary
 
         // Printout a dismissal message
-        Platform.runLater(() -> System.out.println("Agent " + getAID().getName() + " terminating."));
+        try {
+            Platform.runLater(() -> System.out.println("Agent " + getAID().getName() + " terminating."));
+        } catch (Exception e) {
+            System.out.println("Agent " + getAID().getName() + " terminating.");
+        }
     }
 }

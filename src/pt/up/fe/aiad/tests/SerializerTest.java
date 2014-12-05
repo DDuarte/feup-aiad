@@ -2,13 +2,13 @@ package pt.up.fe.aiad.tests;
 
 import jade.core.AID;
 import org.junit.Test;
+import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.Serializer;
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,5 +65,34 @@ public class SerializerTest {
 
         assertEquals(2*agentView2.get(agent1).get("a").getDuration(),
                 agentView2.get(agent2).get("a").getDuration());
+    }
+
+
+    @Test
+    public void testEventProposalJSON() {
+        AID agent1 = new AID("test1", true);
+        AID agent2 = new AID("test2", true);
+        AID agent3 = new AID("test3", true);
+        AID agent4 = new AID("test4", true);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        Calendar c1 = Calendar.getInstance();
+        Calendar c2 = Calendar.getInstance();
+        try {
+            c1.setTime(sdf.parse("10/10/2014"));
+            c2.setTime(sdf.parse("11/10/2014"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<AID> ags = new ArrayList<>();
+        ags.add(agent1);ags.add(agent2);ags.add(agent3);ags.add(agent4);
+
+        ScheduleEvent ev1 = new ScheduleEvent("cenas", 30*60, ags, new TimeInterval(c1, c2));
+        String json = Serializer.EventProposalToJSON(ev1);
+        ScheduleEvent ev2 = Serializer.EventProposalFromJSON(json);
+
+        assertEquals(json,Serializer.EventProposalToJSON(ev2));
     }
 }

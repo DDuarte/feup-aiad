@@ -23,12 +23,13 @@ public class ScheduleEvent {
         _duration = duration;
         _participants = participants;
 
+        /*
         Platform.runLater(() -> {
             System.out.println("Created event " + name + " with interval: " + maxInterval.toString(false) + ". Inviting:");
             for (AID a : participants) {
                 System.out.println(a.getName());
             }
-        });
+        });*/
 
 
         maxBounds = maxInterval;
@@ -51,6 +52,14 @@ public class ScheduleEvent {
 
     public boolean isInitialized() {
         return _initialized;
+    }
+
+    public long getDuration() {
+        return _duration;
+    }
+
+    public TimeInterval getMaxBounds() {
+        return maxBounds;
     }
 
     public String getName() {

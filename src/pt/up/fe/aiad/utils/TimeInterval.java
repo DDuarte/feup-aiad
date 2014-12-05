@@ -33,12 +33,6 @@ public class TimeInterval {
         _startDate = startDate.getTimeInMillis() / 1000;
         _endDate = endDate.getTimeInMillis() / 1000;
 
-        Platform.runLater(() -> System.out.println(toString(false)));
-
-        Calendar sd = startDate;
-        Calendar ed = endDate;
-
-        Platform.runLater(() -> System.out.println("cals: " + String.format("%tFT%<tRZ", sd) + ":" + Integer.toString(sd.get(Calendar.SECOND)) + "," + String.format("%tFT%<tRZ", ed) + ":" + Integer.toString(ed.get(Calendar.SECOND))));
     }
 
     public TimeInterval(String string) {
