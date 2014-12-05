@@ -59,6 +59,17 @@ public class CreatePreferenceController {
     private void validateConstraintData() {
         _saveButton.setDisable(true);
 
+        if (_timeTab.isSelected()) {
+            if (_timeDatePicker.getValue() == null)
+                return;
+
+            if (!_timeAfterRadioButton.isSelected() && !_timeBeforeRadioButton.isSelected())
+                return;
+        } else {
+            if (!_hourAfterRadioButton.isSelected() && !_hourBeforeRadioButton.isSelected())
+                return;
+        }
+
         _saveButton.setDisable(false);
     }
 
