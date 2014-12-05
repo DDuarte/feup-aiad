@@ -78,7 +78,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
     public boolean overlaps(TimeInterval other) {
         if (other.getStartDate() >= getStartDate() && other.getStartDate() < getEndDate())
             return true;
-        return (other.getEndDate() > getStartDate());
+        return (other.getEndDate() > getStartDate() && other.getEndDate() <= getEndDate());
     }
 
 
@@ -99,7 +99,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
         if (simple) {
             return _startDate + "," + _endDate;
         } else {
-            return "[" + (sd.getTime().toString()) + ", " + (sd.getTime().toString()) + "]";
+            return "[" + (sd.getTime().toString()) + ", " + (ed.getTime().toString()) + "]";
         }
     }
 
