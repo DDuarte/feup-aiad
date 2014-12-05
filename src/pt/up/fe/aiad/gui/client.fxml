@@ -44,7 +44,7 @@
             <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Invited To" textAlignment="CENTER" textFill="$x2" wrapText="false" />
                   <ListView fx:id="_eventsInvitedTo" layoutX="11.0" layoutY="48.0" prefHeight="426.0" prefWidth="200.0" />
                   <Button layoutX="14.0" layoutY="501.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="79.0" text="Accept" />
-                  <Button layoutX="128.0" layoutY="501.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="79.0" text="Decline" />
+                  <Button layoutX="128.0" layoutY="501.0" mnemonicParsing="false" onAction="#rejectInvitation" prefHeight="31.0" prefWidth="79.0" text="Decline" />
           </children>
         </AnchorPane>
       </items>

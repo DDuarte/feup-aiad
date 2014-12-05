@@ -125,14 +125,29 @@ public class SchedulerAgent extends Agent {
     public void dispatchInvitations(ScheduleEvent ev) {
         Platform.runLater(() -> _invitedTo.add(ev));
 
-        String json = Serializer.EventProposalToJSON(ev);
+        if (ev._participants.size() > 1) {
+            String json = Serializer.EventProposalToJSON(ev);
 
-        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-        ev._participants.stream().filter(a -> !a.getName().equals(getAID().getName())).forEach(msg::addReceiver);
+            ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+            ev._participants.stream().filter(a -> !a.getName().equals(getAID().getName())).forEach(msg::addReceiver);
 
-        msg.setContent("INVITATION-" + json);
-        msg.setConversationId("schedule-align");
-        send(msg);
+            msg.setContent("INVITATION-" + json);
+            msg.setConversationId("schedule-align");
+            send(msg);
+        }
+    }
+
+    public void rejectInvitation(ScheduleEvent ev) {
+        Platform.runLater(() -> _invitedTo.remove(ev));
+        ev._participants.remove(getAID());
+        if (ev._participants.size() > 0) {
+            ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+            ev._participants.forEach(msg::addReceiver);
+
+            msg.setContent("LEAVING-" + ev.getName());
+            msg.setConversationId("schedule-align");
+            send(msg);
+        }
     }
 
     private void addAgent(AID agent) {

@@ -10,6 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.utils.FXUtils;
@@ -95,6 +98,22 @@ public class ClientController {
             stage.show();
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
+        }
+    }
+
+    @FXML
+    void rejectInvitation(ActionEvent event) {
+
+        if (_eventsInvitedTo.getItems().size() > 0 && _eventsInvitedTo.getSelectionModel().getSelectedItem() != null) {
+            Action response = Dialogs.create()
+                    .owner(null)
+                    .title("Declining Invitation")
+                    .message("Are you sure you want to leave this event?")
+                    .showConfirm();
+
+            if (response == Dialog.ACTION_YES) {
+                _agent.rejectInvitation(_eventsInvitedTo.getSelectionModel().getSelectedItem());
+            }
         }
     }
 }
