@@ -7,7 +7,7 @@ import java.util.Calendar;
 /**
  * Represent an interval between two dates
  */
-public class TimeInterval {
+public class TimeInterval implements Comparable<TimeInterval> {
     private long _startDate;
     private long _endDate;
 
@@ -74,6 +74,15 @@ public class TimeInterval {
         return getDuration() >= duration;
     }
 
+
+    public boolean overlaps(TimeInterval other) {
+        if (other.getStartDate() >= getStartDate() && other.getStartDate() < getEndDate())
+            return true;
+        return (other.getEndDate() > getStartDate());
+    }
+
+
+
     /**
      * @return String representation of the interval
      */
@@ -92,5 +101,13 @@ public class TimeInterval {
         } else {
             return "[" + (sd.getTime().toString()) + ", " + (sd.getTime().toString()) + "]";
         }
+    }
+
+    @Override
+    public int compareTo(TimeInterval o) { //only compares start date
+
+        Long sd = _startDate;
+        Long otherSd = o.getStartDate();
+        return sd.compareTo(otherSd);
     }
 }
