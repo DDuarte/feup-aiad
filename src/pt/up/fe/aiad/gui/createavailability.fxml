@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="169.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.CreateAvailabilityController">
+  <children>
+      <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text="The event must fit in this interval and it must not overlap with your previous declared availabilities" wrappingWidth="358.98046875">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" />
+         </VBox.margin>
+      </Text>
+      <HBox prefHeight="39.0" prefWidth="640.0">
+         <children>
+            <Label text="From:">
+               <HBox.margin>
+                  <Insets left="20.0" right="10.0" />
+               </HBox.margin>
+            </Label>
+            <DatePicker fx:id="_minDate" />
+            <ChoiceBox fx:id="_minHours" prefHeight="25.0" prefWidth="54.0">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ChoiceBox>
+            <Label prefHeight="24.0" prefWidth="11.0" text="h">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
+            <ChoiceBox fx:id="_minMinutes" prefHeight="25.0" prefWidth="47.0" />
+            <Label prefHeight="25.0" prefWidth="40.0" text="min">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox prefHeight="39.0" prefWidth="640.0">
+         <children>
+            <Label text="To:">
+               <HBox.margin>
+                  <Insets left="20.0" right="24.0" />
+               </HBox.margin>
+            </Label>
+            <DatePicker fx:id="_maxDate" />
+            <ChoiceBox fx:id="_maxHours" prefHeight="25.0" prefWidth="54.0">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ChoiceBox>
+            <Label prefHeight="24.0" prefWidth="11.0" text="h">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
+            <ChoiceBox fx:id="_maxMinutes" prefHeight="25.0" prefWidth="47.0" />
+            <Label prefHeight="25.0" prefWidth="40.0" text="min">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+      <AnchorPane prefHeight="43.0" prefWidth="413.0">
+         <children>
+            <Button fx:id="_doneButton" layoutX="233.0" layoutY="7.0" mnemonicParsing="false" onAction="#saveAvailability" prefHeight="34.0" prefWidth="62.0" text="Save" />
+            <Button layoutX="309.0" layoutY="7.0" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0" prefWidth="74.0" text="Cancel" />
+         </children>
+      </AnchorPane>
+  </children>
+</VBox>

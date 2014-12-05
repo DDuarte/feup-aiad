@@ -11,8 +11,8 @@ public class ScheduleEvent {
     private String _name;
     private long _duration; /**< duration in seconds */
     public ArrayList<AID> _participants;
-    private ArrayList<TimeInterval> _availableIntervals; // Domain
-    private ArrayList<ScheduleConstraint> _constraints;
+    public ArrayList<TimeInterval> _availableIntervals; // Domain
+    public ArrayList<ScheduleConstraint> _constraints;
 
     private boolean _initialized = false;
 
