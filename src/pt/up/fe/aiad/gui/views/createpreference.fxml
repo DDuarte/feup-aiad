@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="154.0" prefWidth="347.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreatePreferenceController">
+  <children>
+      <TabPane fx:id="_tabPane" prefHeight="200.0" prefWidth="242.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="_timeTab" text="Time">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="97.0" prefWidth="347.0">
+                     <children>
+                        <HBox layoutX="14.0" layoutY="40.0" prefHeight="26.0" prefWidth="341.0">
+                           <children>
+                              <DatePicker fx:id="_timeDatePicker" />
+                              <ChoiceBox fx:id="_timeHoursChoiceBox" prefHeight="25.0" prefWidth="54.0">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </ChoiceBox>
+                              <Label prefHeight="24.0" prefWidth="11.0" text="h">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ChoiceBox fx:id="_timeMinutesChoiceBox" prefHeight="25.0" prefWidth="47.0" />
+                              <Label prefHeight="25.0" prefWidth="40.0" text="min">
+                                 <HBox.margin>
+                                    <Insets left="3.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <RadioButton fx:id="_timeAfterRadioButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="After" />
+                        <RadioButton fx:id="_timeBeforeRadioButton" layoutX="72.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="_timeHour" text="Hour">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="304.0">
+                     <children>
+                        <RadioButton fx:id="_hourAfterRadioButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="After" />
+                        <RadioButton fx:id="_hourBeforeRadioButton" layoutX="72.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
+                        <HBox layoutX="3.0" layoutY="40.0" prefHeight="26.0" prefWidth="341.0">
+                           <children>
+                              <ChoiceBox fx:id="_hourHoursChoiceBox" prefHeight="25.0" prefWidth="54.0">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </ChoiceBox>
+                              <Label prefHeight="24.0" prefWidth="11.0" text="h">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <ChoiceBox fx:id="_hourMinutesChoiceBox" prefHeight="25.0" prefWidth="47.0" />
+                              <Label prefHeight="25.0" prefWidth="40.0" text="min">
+                                 <HBox.margin>
+                                    <Insets left="3.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <AnchorPane prefHeight="139.0" prefWidth="347.0">
+         <children>
+            <Button fx:id="_saveButton" layoutX="191.0" layoutY="5.0" mnemonicParsing="false" onAction="#savePreference" prefHeight="34.0" prefWidth="62.0" text="Save" />
+            <Button fx:id="_cancelButton" layoutX="259.0" layoutY="5.0" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0" prefWidth="74.0" text="Cancel" />
+         </children>
+      </AnchorPane>
+  </children>
+</VBox>
