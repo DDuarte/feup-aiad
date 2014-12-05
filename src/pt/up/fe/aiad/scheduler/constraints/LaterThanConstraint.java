@@ -2,6 +2,8 @@ package pt.up.fe.aiad.scheduler.constraints;
 
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.util.Calendar;
+
 public class LaterThanConstraint implements  ScheduleConstraint {
     private final long _threshold;
 
@@ -13,5 +15,12 @@ public class LaterThanConstraint implements  ScheduleConstraint {
     @Override
     public boolean isSatisfiedBy(TimeInterval ti) {
         return _threshold <= ti.getStartDate();
+    }
+
+    @Override
+    public String toString() {
+        Calendar c1 = Calendar.getInstance();
+        c1.setTimeInMillis(_threshold*1000);
+        return "Event must take place after " + c1.getTime().toString();
     }
 }
