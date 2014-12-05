@@ -108,7 +108,7 @@ public class ClientController {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("editevent.fxml"));
                 Stage stage = new Stage();
-                stage.setTitle("New Event");
+                stage.setTitle(_eventsInvitedTo.getSelectionModel().getSelectedItem().getName());
                 Scene scene = new Scene(loader.load());
                 scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
                 stage.setScene(scene);
@@ -116,7 +116,7 @@ public class ClientController {
 
 
                 EditEventController controller = loader.<EditEventController>getController();
-                controller.initData(null, null);
+                controller.initData(stage, _eventsInvitedTo.getSelectionModel().getSelectedItem());
 
                 stage.show();
             } catch (Exception e) {
@@ -124,6 +124,7 @@ public class ClientController {
             }
         }
     }
+
 
     @FXML
     void rejectInvitation(ActionEvent event) {
