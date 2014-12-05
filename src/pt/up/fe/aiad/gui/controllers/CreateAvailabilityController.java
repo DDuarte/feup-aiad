@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
-import pt.up.fe.aiad.scheduler.ScheduleEvent;
+import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.time.LocalDate;
@@ -51,17 +51,10 @@ public class CreateAvailabilityController {
         _maxHours.valueProperty().addListener((observable, oldValue, newValue) -> validateEventData());
         _maxMinutes.valueProperty().addListener((observable, oldValue, newValue) -> validateEventData());
 
-        for (int i=0; i < 24; i++) {
-            _minHours.getItems().add(i);
-            _maxHours.getItems().add(i);
-        }
-        _minHours.setValue(0);
-        _maxHours.setValue(0);
-
-        _minMinutes.getItems().addAll(0, 30);
-        _minMinutes.setValue(0);
-        _maxMinutes.getItems().addAll(0, 30);
-        _maxMinutes.setValue(0);
+        FXUtils.initializeHourChoiceBox(_minHours);
+        FXUtils.initializeHourChoiceBox(_maxHours);
+        FXUtils.initializeMinuteChoiceBox(_minMinutes);
+        FXUtils.initializeMinuteChoiceBox(_maxMinutes);
 
         _maxBounds = maxBounds;
 
@@ -108,7 +101,6 @@ public class CreateAvailabilityController {
     public void cancel() {
         _stage.close();
     }
-
 
     @FXML
     public void saveAvailability() {

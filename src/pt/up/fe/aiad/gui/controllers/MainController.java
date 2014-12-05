@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 import jade.wrapper.AgentContainer;
 import javafx.event.ActionEvent;
@@ -56,11 +56,11 @@ public class MainController {
     @FXML
     void startClientButtonOnAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("client.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/client.fxml"));
             Stage stage = new Stage();
             stage.setTitle(_nicknameTextField.getText() + " | iScheduler");
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
             stage.setScene(scene);
 
             String addressSplit[] = _addressTextField.getText().split(":");
@@ -83,11 +83,11 @@ public class MainController {
     @FXML
     void startServerButtonOnAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("server.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/server.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Server | iScheduler");
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
             stage.setScene(scene);
 
             ServerController controller = loader.<ServerController>getController();

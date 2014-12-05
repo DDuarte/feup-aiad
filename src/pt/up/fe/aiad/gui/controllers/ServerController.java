@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 import jade.core.ProfileImpl;
 import jade.core.Runtime;

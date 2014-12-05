@@ -12,11 +12,11 @@ public class MainFrame extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("views/main.fxml"));
             primaryStage.setTitle("iScheduler");
 
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("views/main.css").toExternalForm());
 
             primaryStage.setScene(scene);
             primaryStage.show();

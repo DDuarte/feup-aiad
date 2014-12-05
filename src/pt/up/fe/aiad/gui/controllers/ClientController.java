@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 import jade.core.*;
 import jade.wrapper.AgentController;
@@ -85,11 +85,11 @@ public class ClientController {
     @FXML
     void createNewEventOnAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("createnewevent.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/createnewevent.fxml"));
             Stage stage = new Stage();
             stage.setTitle("New Event");
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
             stage.setScene(scene);
 
 
@@ -106,11 +106,11 @@ public class ClientController {
     void acceptInvitation(ActionEvent event) {
         if (_eventsInvitedTo.getItems().size() > 0 && _eventsInvitedTo.getSelectionModel().getSelectedItem() != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("editevent.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/editevent.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle(_eventsInvitedTo.getSelectionModel().getSelectedItem().getName());
                 Scene scene = new Scene(loader.load());
-                scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
 

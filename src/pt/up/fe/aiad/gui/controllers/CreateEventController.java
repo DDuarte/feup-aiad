@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 
 import jade.core.AID;
@@ -71,21 +71,13 @@ public class CreateEventController {
         _maxHours.valueProperty().addListener((observable, oldValue, newValue) -> validateEventData());
         _maxMinutes.valueProperty().addListener((observable, oldValue, newValue) -> validateEventData());
 
-
         _otherAgents.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _otherAgents.setItems(agent.otherAgents);
 
-        for (int i=0; i < 24; i++) {
-            _minHours.getItems().add(i);
-            _maxHours.getItems().add(i);
-        }
-        _minHours.setValue(0);
-        _maxHours.setValue(0);
-
-        _minMinutes.getItems().addAll(0, 30);
-        _minMinutes.setValue(0);
-        _maxMinutes.getItems().addAll(0, 30);
-        _maxMinutes.setValue(0);
+        FXUtils.initializeHourChoiceBox(_minHours);
+        FXUtils.initializeHourChoiceBox(_maxHours);
+        FXUtils.initializeMinuteChoiceBox(_minMinutes);
+        FXUtils.initializeMinuteChoiceBox(_maxMinutes);
     }
 
     private void validateEventData() {

@@ -1,4 +1,4 @@
-package pt.up.fe.aiad.gui;
+package pt.up.fe.aiad.gui.controllers;
 
 import jade.core.AID;
 import javafx.collections.FXCollections;
@@ -7,7 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
@@ -15,7 +17,6 @@ import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.stream.Collectors;
 
@@ -67,16 +68,14 @@ public class EditEventController {
 
         _maxBounds = ev.getMaxBounds();
 
-        long mins = _duration / 60;
+        long minutes = _duration / 60;
+        _durationTextField.setText(Long.toString(minutes / 60) + "h" + Long.toString(minutes % 60) + "m");
 
-        _durationTextField.setText(Long.toString(mins / 60) + "h" + Long.toString(mins % 60) + "m");
         Calendar c1 = Calendar.getInstance();
         c1.setTimeInMillis(_maxBounds.getStartDate() * 1000);
         _minDateTextField.setText(c1.getTime().toString());
         c1.setTimeInMillis(_maxBounds.getEndDate() * 1000);
         _maxDateTextField.setText(c1.getTime().toString());
-
-
     }
 
     void validateData() {
@@ -88,11 +87,11 @@ public class EditEventController {
     @FXML
     void addAvailability(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("createavailability.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/createavailability.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Add Availability");
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -103,6 +102,7 @@ public class EditEventController {
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
         }
+
         validateData();
     }
 
@@ -114,6 +114,35 @@ public class EditEventController {
         }
     }
 
+    @FXML
+    void addPreference(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/createpreference.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Add Preference");
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            CreatePreferenceController controller = loader.<CreatePreferenceController>getController();
+            controller.initData(stage, _constraints);
+
+            stage.show();
+        } catch (Exception e) {
+            FXUtils.showExceptionDialog(e);
+        }
+
+        validateData();
+    }
+
+    @FXML
+    void removePreference(ActionEvent event) {
+        if (_constraintView.getItems().size() > 0 && _constraintView.getSelectionModel().getSelectedItem() != null) {
+            _constraints.remove(_constraintView.getSelectionModel().getSelectedItem());
+            validateData();
+        }
+    }
 
     @FXML
     void cancelEdit() {

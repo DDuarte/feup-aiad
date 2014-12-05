@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="169.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.CreateAvailabilityController">
+<VBox prefHeight="169.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreateAvailabilityController">
   <children>
       <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text="The event must fit in this interval and it must not overlap with your previous declared availabilities" wrappingWidth="358.98046875">
          <VBox.margin>
