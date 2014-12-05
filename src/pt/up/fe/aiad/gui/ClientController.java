@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -98,6 +99,29 @@ public class ClientController {
             stage.show();
         } catch (Exception e) {
             FXUtils.showExceptionDialog(e);
+        }
+    }
+
+    @FXML
+    void acceptInvitation(ActionEvent event) {
+        if (_eventsInvitedTo.getItems().size() > 0 && _eventsInvitedTo.getSelectionModel().getSelectedItem() != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("editevent.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("New Event");
+                Scene scene = new Scene(loader.load());
+                scene.getStylesheets().add(getClass().getResource("main.css").toExternalForm());
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+
+                EditEventController controller = loader.<EditEventController>getController();
+                controller.initData(null, null);
+
+                stage.show();
+            } catch (Exception e) {
+                FXUtils.showExceptionDialog(e);
+            }
         }
     }
 

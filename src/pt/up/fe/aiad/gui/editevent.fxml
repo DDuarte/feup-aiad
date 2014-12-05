@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="609.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.EditEventController">
+  <children>
+    <SplitPane dividerPositions="0.2505567928730512, 0.5657015590200446" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Participants" textAlignment="CENTER" wrapText="false">
+              <font>
+                <Font size="18.0" fx:id="x1" />
+              </font>
+              <textFill>
+                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+              </textFill>
+            </Label>
+                  <ListView layoutX="11.0" layoutY="41.0" prefHeight="526.0" prefWidth="200.0" />
+          </children>
+        </AnchorPane>
+        <ScrollPane prefHeight="576.0" prefWidth="398.0">
+          <content>
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="575.0" prefWidth="276.0">
+              <children>
+                <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Your Availabiltiess" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                        <ListView fx:id="_domainView" layoutX="14.0" layoutY="41.0" prefHeight="480.0" prefWidth="256.0" />
+                        <Button layoutX="14.0" layoutY="528.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="111.0" text="Add Availability" />
+                        <Button layoutX="142.0" layoutY="528.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="126.0" text="Remove Availability" />
+              </children>
+            </AnchorPane>
+          </content>
+        </ScrollPane>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Your Preferences" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+                  <ListView layoutX="14.0" layoutY="41.0" prefHeight="480.0" prefWidth="359.0" />
+                  <Button layoutX="14.0" layoutY="532.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="111.0" text="Add Preference" />
+                  <Button layoutX="231.0" layoutY="532.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="142.0" text="Remove Preference" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Editing Event" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="30.0" prefWidth="825.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button layoutX="765.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="47.0" text="Done" />
+               </children></Pane>
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>
