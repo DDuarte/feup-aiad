@@ -112,13 +112,13 @@ public class CreateEventController {
         if (minLd == null)
             return;
         Calendar minC =  Calendar.getInstance();
-        minC.set(minLd.getYear(), minLd.getMonthValue(), minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
+        minC.set(minLd.getYear(), minLd.getMonthValue()-1, minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
 
         LocalDate maxLd = _maxDate.getValue();
         if (maxLd == null)
             return;
         Calendar maxC =  Calendar.getInstance();
-        maxC.set(maxLd.getYear(), maxLd.getMonthValue(), maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
+        maxC.set(maxLd.getYear(), maxLd.getMonthValue()-1, maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
 
         TimeInterval ti;
         try {
@@ -142,11 +142,11 @@ public class CreateEventController {
 
         LocalDate minLd = _minDate.getValue();
         Calendar minC =  Calendar.getInstance();
-        minC.set(minLd.getYear(), minLd.getMonthValue(), minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
+        minC.set(minLd.getYear(), minLd.getMonthValue()-1, minLd.getDayOfMonth(), _minHours.getValue(), _minMinutes.getValue(), 0);
 
         LocalDate maxLd = _maxDate.getValue();
         Calendar maxC =  Calendar.getInstance();
-        maxC.set(maxLd.getYear(), maxLd.getMonthValue(), maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
+        maxC.set(maxLd.getYear(), maxLd.getMonthValue()-1, maxLd.getDayOfMonth(), _maxHours.getValue(), _maxMinutes.getValue(), 0);
 
         TimeInterval ti = new TimeInterval(minC, maxC);
 
