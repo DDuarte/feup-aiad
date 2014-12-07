@@ -15,6 +15,7 @@ public class ScheduleEvent {
     public ArrayList<TimeInterval> _possibleSolutions;
 
     public TimeInterval _currentInterval; //null if no solution is found
+    public int _currentCost;
 
     private boolean _initialized = false;
 

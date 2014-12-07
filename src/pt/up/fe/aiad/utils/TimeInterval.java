@@ -36,6 +36,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
 
     }
 
+    // string from ToString(true)
     public TimeInterval(String string) {
         String[] parts = string.split(",");
 
@@ -104,6 +105,23 @@ public class TimeInterval implements Comparable<TimeInterval> {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return "[" + (dateFormat.format(sd.getTime())) + ", " + (dateFormat.format(ed.getTime())) + "]";
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TimeInterval))
+            return false;
+
+        if (obj == this)
+            return true;
+
+        TimeInterval rhs = (TimeInterval) obj;
+        return rhs._startDate == _startDate && rhs._endDate == _endDate;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (31 * _startDate + _endDate);
     }
 
     @SuppressWarnings("NullableProblems")

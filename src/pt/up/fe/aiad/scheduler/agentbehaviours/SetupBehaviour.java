@@ -15,7 +15,7 @@ public class SetupBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-        MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE);
+        MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.PROPOSE); // TODO: Change to MatchConversationId
         ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
             int separatorIndex = msg.getContent().indexOf('-');

@@ -17,7 +17,9 @@ import org.controlsfx.control.Notifications;
 import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
 import pt.up.fe.aiad.scheduler.agentbehaviours.SetupBehaviour;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class SchedulerAgent extends Agent {
@@ -267,7 +269,7 @@ public class SchedulerAgent extends Agent {
 
     @Override
     protected void takeDown() {
-        // Deregister from the yellow pages
+        // De-register from the yellow pages
         try {
             DFService.deregister(this);
         } catch (FIPAException fe) {

@@ -4,16 +4,22 @@ import jade.core.AID;
 import org.junit.Test;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.Serializer;
+import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SerializerTest {
 
+    /*
     @Test
     public void testEventsJSON() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -65,7 +71,7 @@ public class SerializerTest {
 
         assertEquals(2*agentView2.get(agent1).get("a").getDuration(),
                 agentView2.get(agent2).get("a").getDuration());
-    }
+    }*/
 
 
     @Test
@@ -94,5 +100,53 @@ public class SerializerTest {
         ScheduleEvent ev2 = Serializer.EventProposalFromJSON(json);
 
         assertEquals(json,Serializer.EventProposalToJSON(ev2));
+    }
+
+    @Test
+    public void testNoGoodJSON() {
+        ABTBehaviour.NoGood ng = new ABTBehaviour.NoGood();
+
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+        Calendar c3 = Calendar.getInstance(); c3.set(2004, Calendar.JANUARY, 31, 18, 35);
+        TimeInterval t1 = new TimeInterval(c1, c2);
+        TimeInterval t2 = new TimeInterval(c2, c3);
+
+        ng.v = t1;
+        ng.cond = new HashMap<>();
+        ng.cond.put("test1", t1);
+        ng.cond.put("test2", t2);
+        ng.tag = new TreeSet<>();
+        ng.tag.add("test3");
+        ng.tag.add("test4");
+        ng.cost = 3;
+        ng.exact = true;
+
+        String json = Serializer.NoGoodToJSON(ng);
+        ABTBehaviour.NoGood ng2 = Serializer.NoGoodFromJSON(json);
+
+        assertEquals(ng2.v, ng.v);
+        assertEquals(ng2.cond.get("test1"), ng.cond.get("test1"));
+        assertEquals(ng2.cond.get("test2"), ng.cond.get("test2"));
+        assertTrue(ng2.tag.containsAll(ng.tag) && ng.tag.containsAll(ng2.tag));
+        assertEquals(ng2.cost, ng.cost);
+        assertEquals(ng2.exact, ng.exact);
+    }
+
+    @Test
+    public void testVariableJSON() {
+        ABTBehaviour.Variable var = new ABTBehaviour.Variable();
+
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+
+        var.v = new TimeInterval(c1, c2);
+        var.agent = "test";
+
+        String json = Serializer.VariableToJSON(var);
+        ABTBehaviour.Variable var2 = Serializer.VariableFromJSON(json);
+
+        assertEquals(var2.v, var.v);
+        assertEquals(var2.agent, var.agent);
     }
 }

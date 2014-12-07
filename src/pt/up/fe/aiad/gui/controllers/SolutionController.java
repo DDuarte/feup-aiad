@@ -17,7 +17,7 @@ public class SolutionController {
             solutionText = "No events were allocated for your schedule. At least now you have some free time :)";
         else {
             for (ScheduleEvent ev : evs) {
-                solutionText += ev.getName() + ":\n";
+                solutionText += ev.getName() + " (cost " + ev._currentCost + ") :\n";
                 solutionText += ev._currentInterval.toString();
                 solutionText += "\n\n";
             }

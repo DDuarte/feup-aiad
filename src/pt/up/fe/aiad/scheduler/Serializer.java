@@ -3,14 +3,75 @@ package pt.up.fe.aiad.scheduler;
 import jade.core.AID;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Serializer {
+
+    public static ABTBehaviour.NoGood NoGoodFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+
+        ABTBehaviour.NoGood ng = new ABTBehaviour.NoGood();
+
+        ng.v = new TimeInterval(obj.getString("v"));
+        ng.cond = new HashMap<>();
+
+        JSONObject condObj = obj.getJSONObject("cond");
+        Iterator<String> itr = condObj.keys();
+        while (itr.hasNext()) {
+            String name = itr.next();
+            ng.cond.put(name, new TimeInterval(condObj.getString(name)));
+        }
+
+        JSONArray tags = obj.getJSONArray("tag");
+        ng.tag = new TreeSet<>();
+        for (int i = 0; i < tags.length(); ++i) {
+            ng.tag.add(tags.getString(i));
+        }
+
+        ng.cost = obj.getInt("cost");
+        ng.exact = obj.getBoolean("exact");
+
+        return ng;
+    }
+
+    public static String NoGoodToJSON(ABTBehaviour.NoGood ng) {
+
+        JSONObject condObj = new JSONObject();
+        for (Map.Entry<String, TimeInterval> c : ng.cond.entrySet()) {
+            condObj.put(c.getKey(), c.getValue().toString(true));
+        }
+
+        JSONObject obj = new JSONObject()
+                .put("v", ng.v.toString(true))
+                .put("cond", condObj)
+                .put("tag", ng.tag)
+                .put("cost", ng.cost)
+                .put("exact", ng.exact);
+
+        return obj.toString();
+    }
+
+    public static ABTBehaviour.Variable VariableFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+
+        ABTBehaviour.Variable var = new ABTBehaviour.Variable();
+
+        var.v = new TimeInterval(obj.getString("v"));
+        var.agent = obj.getString("agent");
+
+        return var;
+    }
+
+    public static String VariableToJSON(ABTBehaviour.Variable var) {
+        JSONObject obj = new JSONObject()
+                .put("v", var.v.toString(true))
+                .put("agent", var.agent);
+
+        return obj.toString();
+    }
 
     public static String EventProposalToJSON(ScheduleEvent ev) {
         JSONObject obj = new JSONObject();
@@ -38,7 +99,9 @@ public class Serializer {
 
         return new ScheduleEvent(obj.getString("name"), obj.getLong("duration"), n, new TimeInterval(obj.getString("maxbounds")));
     }
-                                    /* eventName - timeInterval */
+
+    /*
+                                    /* eventName - timeInterval *
     public static String EventsToJSON(Map<String, TimeInterval> events) {
         JSONObject obj = new JSONObject();
 
@@ -85,5 +148,5 @@ public class Serializer {
         }
 
         return events;
-    }
+    }*/
 }
