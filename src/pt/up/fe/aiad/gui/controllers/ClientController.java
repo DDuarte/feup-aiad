@@ -182,4 +182,21 @@ public class ClientController {
             }
         }
     }
+
+    @FXML
+    void inviteToEvent(ActionEvent event) {
+        if (_eventsJoined.getItems().size() > 0 && _eventsJoined.getSelectionModel().getSelectedItem() != null) {
+            if (_allAgents.getItems().size() > 0 && _allAgents.getSelectionModel().getSelectedItem() != null) {
+                if (_eventsJoined.getSelectionModel().getSelectedItem()._participants.contains(_agent.agentNameToAid.get(_allAgents.getSelectionModel().getSelectedItem()))) {
+                    Dialogs.create()
+                            .owner(null)
+                            .title("Invitation Failed")
+                            .message("That user is already participating in the event")
+                            .showWarning();
+                }
+                else
+                    _agent.addAgentToEvent(_allAgents.getSelectionModel().getSelectedItem(), _eventsJoined.getSelectionModel().getSelectedItem());
+            }
+        }
+    }
 }

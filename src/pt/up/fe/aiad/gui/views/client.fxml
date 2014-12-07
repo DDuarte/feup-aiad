@@ -23,7 +23,8 @@
               </textFill>
             </Label>
                   <ListView fx:id="_allAgents" layoutX="11.0" layoutY="53.0" prefHeight="426.0" prefWidth="200.0" />
-                  <Button layoutX="11.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="200.0" text="Invite to Event" />
+                  <Button layoutX="11.0" layoutY="500.0" mnemonicParsing="false" onAction="#inviteToEvent" prefHeight="31.0" prefWidth="200.0" text="Invite to Event" />
+                  <Text fill="#909090" layoutX="14.0" layoutY="547.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select the event in the next window" wrappingWidth="200.0" />
           </children>
         </AnchorPane>
         <ScrollPane prefHeight="567.0" prefWidth="438.0">

@@ -168,6 +168,24 @@ public class SchedulerAgent extends Agent {
         }
     }
 
+    public void addAgentToEvent(String agentName, ScheduleEvent ev) {
+        ACLMessage addMsg = new ACLMessage(ACLMessage.PROPOSE);
+        ev._participants.forEach(addMsg::addReceiver);
+        addMsg.setContent("ADDING-"+ev.getName()+","+agentName);
+        addMsg.setConversationId("schedule-align");
+        send(addMsg);
+
+        ev._participants.add(agentNameToAid.get(agentName));
+        String json = Serializer.EventProposalToJSON(ev);
+
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+        msg.addReceiver(agentNameToAid.get(agentName));
+
+        msg.setContent("INVITATION-" + json);
+        msg.setConversationId("schedule-align");
+        send(msg);
+    }
+
     private void addAgent(AID agent) {
         Platform.runLater(() -> {
             otherAgents.add(agent.getName());

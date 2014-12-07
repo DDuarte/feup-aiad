@@ -25,6 +25,9 @@ public class SetupBehaviour extends CyclicBehaviour {
                 else if (msgType.equals("LEAVING")) {
                     RegisterLeavingEvent(msg);
                 }
+                else if (msgType.equals("ADDING")) {
+                    RegisterEventAddition(msg);
+                }
                 else {
                     System.err.println("Received an invalid message type.");
                 }
@@ -34,6 +37,49 @@ public class SetupBehaviour extends CyclicBehaviour {
             }
         } else {
             block();
+        }
+    }
+
+    private void RegisterEventAddition(ACLMessage msg) {
+        String msgText = msg.getContent().substring(msg.getContent().indexOf('-')+1, msg.getContent().length());
+        String eventName = msgText.substring(0, msgText.indexOf(','));
+        String agentName  = msgText.substring(msgText.indexOf(',') + 1, msgText.length());
+        if (!msg.getSender().getName().equals(myAgent.getName())) {
+            boolean foundEv = false;
+            for (ScheduleEvent ev : ((SchedulerAgent) myAgent)._events) {
+                if (ev.getName().equals(eventName)) {
+                    ev._participants.add(((SchedulerAgent) myAgent).agentNameToAid.get(agentName));
+                    foundEv = true;
+                    break;
+                }
+            }
+            if (!foundEv) {
+                for (ScheduleEvent ev : ((SchedulerAgent) myAgent)._invitedTo) {
+                    if (ev.getName().equals(eventName)) {
+                        ev._participants.add(((SchedulerAgent) myAgent).agentNameToAid.get(agentName));
+                        foundEv = true;
+                        break;
+                    }
+                }
+            }
+            if (foundEv) {
+                Platform.runLater(() -> {
+                    Notifications.create()
+                            .title("Agent Joined Event")
+                            .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
+                            .darkStyle()
+                            .showWarning();
+                });
+            }
+        }
+        else {
+            Platform.runLater(() -> {
+                Notifications.create()
+                        .title("Agent Joined Event")
+                        .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
+                        .darkStyle()
+                        .showWarning();
+            });
         }
     }
 
