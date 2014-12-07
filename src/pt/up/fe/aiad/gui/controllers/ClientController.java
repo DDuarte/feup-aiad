@@ -155,7 +155,7 @@ public class ClientController {
                     .showConfirm();
 
             if (response == Dialog.ACTION_YES) {
-                _agent.rejectInvitation(_eventsJoined.getSelectionModel().getSelectedItem());
+                _agent.leaveEvent(_eventsJoined.getSelectionModel().getSelectedItem());
             }
         }
     }
