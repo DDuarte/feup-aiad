@@ -63,6 +63,9 @@ public class CreateAvailabilityController {
     public void validateEventData() {
         _doneButton.setDisable(true);
 
+        if (_minDate.getValue() == null || _maxDate.getValue() == null)
+            return;
+
         Calendar minC = TimeInterval.calendarFromLocalDate(_minDate.getValue(), _minHours.getValue(), _minMinutes.getValue());
         Calendar maxC = TimeInterval.calendarFromLocalDate(_maxDate.getValue(), _maxHours.getValue(), _maxMinutes.getValue());
         if (minC == null || maxC == null)
