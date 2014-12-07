@@ -1,5 +1,6 @@
 package pt.up.fe.aiad.gui.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -107,6 +108,7 @@ public class CreateAvailabilityController {
         TimeInterval ti = new TimeInterval(minC, maxC);
 
         _availabilities.add(ti);
+        FXCollections.sort(_availabilities);
         _stage.close();
     }
 }
