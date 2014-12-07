@@ -2,7 +2,6 @@ package pt.up.fe.aiad.utils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -81,11 +80,9 @@ public class TimeInterval implements Comparable<TimeInterval> {
     }
 
     public boolean overlaps(TimeInterval other) {
-        if (other.getStartDate() >= getStartDate() && other.getStartDate() < getEndDate())
-            return true;
-        return (other.getEndDate() > getStartDate() && other.getEndDate() <= getEndDate());
+        return other.getStartDate() >= getStartDate() && other.getStartDate() < getEndDate() ||
+                (other.getEndDate() > getStartDate() && other.getEndDate() <= getEndDate());
     }
-
 
 
     /**
@@ -109,6 +106,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(TimeInterval o) { //only compares start date
 
@@ -123,6 +121,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
         return new TimeInterval(_startDate + INTERVAL_SLOT, _endDate + INTERVAL_SLOT);
     }
 
+    @SuppressWarnings("MagicConstant")
     public static Calendar calendarFromLocalDate(LocalDate lc, int hours, int minutes) {
         if (lc == null)
             return null;
@@ -132,14 +131,4 @@ public class TimeInterval implements Comparable<TimeInterval> {
         return c;
     }
 
-    public static ArrayList<TimeInterval> getPossibleIntervals(long startDate, long endDate, int duration) {
-        ArrayList<TimeInterval> intervals = new ArrayList<>();
-
-        while (startDate < endDate) {
-            intervals.add(new TimeInterval(startDate, startDate + duration));
-            startDate += duration;
-        }
-
-        return intervals;
-    }
 }

@@ -1,6 +1,5 @@
 package pt.up.fe.aiad.scheduler.agentbehaviours;
 
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -22,28 +21,30 @@ public class SetupBehaviour extends SimpleBehaviour {
             int separatorIndex = msg.getContent().indexOf('-');
             if (separatorIndex != -1) {
                 String msgType = msg.getContent().substring(0, msg.getContent().indexOf('-'));
-                if (msgType.equals("INVITATION")) {
-                    RegisterInvitation(msg);
-                }
-                else if (msgType.equals("LEAVING")) {
-                    RegisterLeavingEvent(msg);
-                }
-                else if (msgType.equals("ADDING")) {
-                    RegisterEventAddition(msg);
-                }
-                else if (msgType.equals("READY")) {
-                    ((SchedulerAgent) myAgent).readyAgents.add(msg.getSender());
-                    if (((SchedulerAgent) myAgent).readyAgents.containsAll(((SchedulerAgent) myAgent).allAgents)) {
-                        isFinished = true;
-                        Platform.runLater(() -> ((SchedulerAgent) myAgent).allReady.set(true));
-                    }
-                }
-                else if (msgType.equals("CANCEL_READY")) {
-                    ((SchedulerAgent) myAgent).readyAgents.remove(msg.getSender());
-                    isFinished = false;
-                }
-                else {
-                    System.err.println("Received an invalid message type.");
+                switch (msgType) {
+                    case "INVITATION":
+                        RegisterInvitation(msg);
+                        break;
+                    case "LEAVING":
+                        RegisterLeavingEvent(msg);
+                        break;
+                    case "ADDING":
+                        RegisterEventAddition(msg);
+                        break;
+                    case "READY":
+                        ((SchedulerAgent) myAgent).readyAgents.add(msg.getSender());
+                        if (((SchedulerAgent) myAgent).readyAgents.containsAll(((SchedulerAgent) myAgent).allAgents)) {
+                            isFinished = true;
+                            Platform.runLater(() -> ((SchedulerAgent) myAgent).allReady.set(true));
+                        }
+                        break;
+                    case "CANCEL_READY":
+                        ((SchedulerAgent) myAgent).readyAgents.remove(msg.getSender());
+                        isFinished = false;
+                        break;
+                    default:
+                        System.err.println("Received an invalid message type.");
+                        break;
                 }
             }
             else {
@@ -82,23 +83,19 @@ public class SetupBehaviour extends SimpleBehaviour {
                 }
             }
             if (foundEv) {
-                Platform.runLater(() -> {
-                    Notifications.create()
-                            .title("Agent Joined Event")
-                            .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
-                            .darkStyle()
-                            .showInformation();
-                });
-            }
-        }
-        else {
-            Platform.runLater(() -> {
-                Notifications.create()
+                Platform.runLater(() -> Notifications.create()
                         .title("Agent Joined Event")
                         .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
                         .darkStyle()
-                        .showInformation();
-            });
+                        .showInformation());
+            }
+        }
+        else {
+            Platform.runLater(() -> Notifications.create()
+                        .title("Agent Joined Event")
+                        .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
+                        .darkStyle()
+                        .showInformation());
         }
     }
 
@@ -122,13 +119,11 @@ public class SetupBehaviour extends SimpleBehaviour {
             }
         }
         if (foundEv) {
-            Platform.runLater(() -> {
-                Notifications.create()
-                        .title("Agent Left Event")
-                        .text(msg.getSender().getLocalName() + " has left the event " + eventName)
-                        .darkStyle()
-                        .showWarning();
-            });
+            Platform.runLater(() -> Notifications.create()
+                    .title("Agent Left Event")
+                    .text(msg.getSender().getLocalName() + " has left the event " + eventName)
+                    .darkStyle()
+                    .showWarning());
         }
     }
 

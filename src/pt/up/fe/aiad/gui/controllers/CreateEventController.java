@@ -80,6 +80,7 @@ public class CreateEventController {
         FXUtils.initializeMinuteChoiceBox(_maxMinutes);
     }
 
+    @SuppressWarnings("MagicConstant")
     private void validateEventData() {
         _confirmButton.setDisable(true);
 

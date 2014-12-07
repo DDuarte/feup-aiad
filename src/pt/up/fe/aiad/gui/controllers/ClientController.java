@@ -3,8 +3,6 @@ package pt.up.fe.aiad.gui.controllers;
 import jade.core.*;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +23,7 @@ import pt.up.fe.aiad.utils.FXUtils;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("deprecation")
 public class ClientController {
     private String _addressIp;
     private int _port;

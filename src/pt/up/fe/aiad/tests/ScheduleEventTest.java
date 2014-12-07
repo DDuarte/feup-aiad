@@ -1,18 +1,13 @@
 package pt.up.fe.aiad.tests;
 
-
-import jade.core.AID;
 import org.junit.Test;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
-import pt.up.fe.aiad.scheduler.constraints.AfterHourConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class ScheduleEventTest {
     @Test

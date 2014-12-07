@@ -4,7 +4,6 @@ import jade.core.AID;
 import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
 public class ScheduleEvent {

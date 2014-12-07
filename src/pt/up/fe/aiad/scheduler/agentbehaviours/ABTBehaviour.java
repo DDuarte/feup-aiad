@@ -1,16 +1,12 @@
 package pt.up.fe.aiad.scheduler.agentbehaviours;
 
 import jade.core.AID;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
-import pt.up.fe.aiad.scheduler.Message;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
-import pt.up.fe.aiad.scheduler.Serializer;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.Map;
-import java.util.TreeSet;
 
 public class ABTBehaviour extends SimpleBehaviour {
     //TODO private TreeSet<AID> _links;
