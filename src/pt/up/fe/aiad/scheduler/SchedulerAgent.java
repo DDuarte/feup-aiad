@@ -22,7 +22,8 @@ import java.util.*;
 
 public class SchedulerAgent extends Agent {
     public enum Type {
-        ABT
+        ABT,
+        ADOPT
     }
 
     /**
@@ -72,12 +73,15 @@ public class SchedulerAgent extends Agent {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
-        sd.setType("scheduler");
+        sd.setType(_agentType.toString());
         sd.setName("iScheduler");
         dfd.addServices(sd);
         try {
             DFAgentDescription template = new DFAgentDescription();
-
+            ServiceDescription templateSD = new ServiceDescription();
+            templateSD.setType(_agentType.toString());
+            templateSD.setName("iScheduler");
+            template.addServices(templateSD);
             addBehaviour(new SubscriptionInitiator(this, DFService.createSubscriptionMessage(this, getDefaultDF(), template, null)) {
                 protected void handleInform(ACLMessage inform) {
                     try {
