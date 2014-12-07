@@ -4,6 +4,7 @@ import jade.core.AID;
 import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class ScheduleEvent {
@@ -12,6 +13,7 @@ public class ScheduleEvent {
     public ArrayList<AID> _participants;
     public ArrayList<TimeInterval> _availableIntervals; // Domain
     public ArrayList<ScheduleConstraint> _constraints;
+    public ArrayList<TimeInterval> _possibleSolutions;
 
     public TimeInterval _currentInterval; //null if no solution is found
 
@@ -47,7 +49,20 @@ public class ScheduleEvent {
     public void initialize(ArrayList<TimeInterval> domain, ArrayList<ScheduleConstraint> constraints) {
         _availableIntervals = domain;
         _constraints = constraints;
+
+        initializePossibilities(domain);
         _initialized = true;
+    }
+
+    private void initializePossibilities(ArrayList<TimeInterval> domain) {
+        _possibleSolutions = new ArrayList<>();
+        for (TimeInterval ti : domain) {
+            TimeInterval possibility = new TimeInterval(ti.getStartDate(), ti.getStartDate() + _duration);
+            while (ti.contains(possibility)) {
+                _possibleSolutions.add(possibility);
+                possibility = possibility.getNext();
+            }
+        }
     }
 
     public boolean isInitialized() {

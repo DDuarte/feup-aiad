@@ -18,7 +18,8 @@ public class TimeInterval implements Comparable<TimeInterval> {
      * @param endDate Ending date of the interval in seconds since Unix Epoch
      */
     public TimeInterval(long startDate, long endDate) {
-        if (startDate <= endDate) throw new IllegalArgumentException();
+        if (startDate > endDate)
+            throw new IllegalArgumentException();
         _startDate = startDate;
         _endDate = endDate;
     }
@@ -75,6 +76,9 @@ public class TimeInterval implements Comparable<TimeInterval> {
         return getDuration() >= duration;
     }
 
+    public boolean contains(TimeInterval ti) {
+        return ti.getStartDate() >= getStartDate() && ti.getEndDate() <= getEndDate();
+    }
 
     public boolean overlaps(TimeInterval other) {
         if (other.getStartDate() >= getStartDate() && other.getStartDate() < getEndDate())
