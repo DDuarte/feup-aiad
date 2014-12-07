@@ -32,18 +32,18 @@
             </HBox>
             <HBox prefHeight="22.0" prefWidth="598.0">
                <children>
-                  <Label prefHeight="46.0" prefWidth="55.0" text="Duration:">
+                  <Label prefHeight="31.0" prefWidth="63.0" text="Duration:">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="_hours" prefHeight="25.0" prefWidth="48.0" promptText="hours" />
+                  <TextField fx:id="_hours" prefHeight="31.0" prefWidth="57.0" promptText="hours" />
                   <Label prefHeight="25.0" prefWidth="11.0" text="h">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin></Label>
                   <ChoiceBox fx:id="_minutes" prefHeight="25.0" prefWidth="53.0" />
-                  <Label prefHeight="25.0" prefWidth="23.0" text="min">
+                  <Label prefHeight="25.0" prefWidth="31.0" text="min">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
@@ -122,8 +122,8 @@
       </VBox>
       <Pane prefHeight="316.0" prefWidth="598.0">
          <children>
-            <Button fx:id="_confirmButton" layoutX="459.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveEvent" prefHeight="30.0" prefWidth="48.0" text="Save" />
-            <Button layoutX="521.0" layoutY="4.0" mnemonicParsing="false" onAction="#cancelCreation" prefHeight="30.0" prefWidth="63.0" text="Cancel" />
+            <Button fx:id="_confirmButton" layoutX="430.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveEvent" prefHeight="31.0" prefWidth="63.0" text="Save" />
+            <Button layoutX="507.0" layoutY="4.0" mnemonicParsing="false" onAction="#cancelCreation" prefHeight="31.0" prefWidth="77.0" text="Cancel" />
          </children>
       </Pane>
   </items>

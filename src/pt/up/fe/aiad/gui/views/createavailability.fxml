@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="169.0" prefWidth="413.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreateAvailabilityController">
+<VBox prefHeight="187.0" prefWidth="463.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreateAvailabilityController">
   <children>
       <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text="The event must fit in this interval and it must not overlap with your previous declared availabilities" wrappingWidth="358.98046875">
          <VBox.margin>
@@ -46,7 +46,7 @@
       </HBox>
       <HBox prefHeight="39.0" prefWidth="640.0">
          <children>
-            <Label text="To:">
+            <Label prefHeight="21.0" prefWidth="24.0" text="To:">
                <HBox.margin>
                   <Insets left="20.0" right="24.0" />
                </HBox.margin>
@@ -70,10 +70,10 @@
             </Label>
          </children>
       </HBox>
-      <AnchorPane prefHeight="43.0" prefWidth="413.0">
+      <AnchorPane prefHeight="47.0" prefWidth="413.0">
          <children>
-            <Button fx:id="_doneButton" layoutX="233.0" layoutY="7.0" mnemonicParsing="false" onAction="#saveAvailability" prefHeight="34.0" prefWidth="62.0" text="Save" />
-            <Button layoutX="309.0" layoutY="7.0" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0" prefWidth="74.0" text="Cancel" />
+            <Button fx:id="_doneButton" layoutX="260.0" layoutY="7.0" mnemonicParsing="false" onAction="#saveAvailability" prefHeight="34.0" prefWidth="62.0" text="Save" />
+            <Button layoutX="336.0" layoutY="7.0" mnemonicParsing="false" onAction="#cancel" prefHeight="34.0" prefWidth="74.0" text="Cancel" />
          </children>
       </AnchorPane>
   </children>

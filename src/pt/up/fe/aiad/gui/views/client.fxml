@@ -10,7 +10,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.ClientController">
   <children>
-    <SplitPane dividerPositions="0.2505567928730512, 0.5690423162583519" focusTraversable="true" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.2505567928730512, 0.5723830734966593" focusTraversable="true" VBox.vgrow="ALWAYS">
       <items>
         <AnchorPane>
           <children>

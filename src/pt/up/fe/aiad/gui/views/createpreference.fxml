@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="154.0" prefWidth="347.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreatePreferenceController">
+<VBox prefHeight="166.0" prefWidth="363.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pt.up.fe.aiad.gui.controllers.CreatePreferenceController">
   <children>
       <TabPane fx:id="_tabPane" prefHeight="200.0" prefWidth="242.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -39,7 +39,7 @@
                            </children>
                         </HBox>
                         <RadioButton fx:id="_timeAfterRadioButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="After" />
-                        <RadioButton fx:id="_timeBeforeRadioButton" layoutX="72.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
+                        <RadioButton fx:id="_timeBeforeRadioButton" layoutX="86.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
                      </children>
                   </AnchorPane>
             </content>
@@ -49,7 +49,7 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="171.0" prefWidth="304.0">
                      <children>
                         <RadioButton fx:id="_hourAfterRadioButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="After" />
-                        <RadioButton fx:id="_hourBeforeRadioButton" layoutX="72.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
+                        <RadioButton fx:id="_hourBeforeRadioButton" layoutX="86.0" layoutY="14.0" mnemonicParsing="false" text="Before" />
                         <HBox layoutX="3.0" layoutY="40.0" prefHeight="26.0" prefWidth="341.0">
                            <children>
                               <ChoiceBox fx:id="_hourHoursChoiceBox" prefHeight="25.0" prefWidth="54.0">

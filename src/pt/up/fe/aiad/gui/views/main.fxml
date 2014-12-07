@@ -49,17 +49,17 @@
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="30.0" prefWidth="306.0">
                                  <children>
-                                    <Label text="Agent Name:" HBox.hgrow="ALWAYS">
+                                    <Label prefHeight="21.0" prefWidth="130.0" text="Agent Name:" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets right="5.0" />
                                        </HBox.margin>
                                     </Label>
-                                    <TextField fx:id="_nicknameTextField" prefHeight="25.0" prefWidth="227.0" promptText="nickname" HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="_nicknameTextField" prefHeight="31.0" prefWidth="227.0" promptText="nickname" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="30.0" prefWidth="306.0">
                                  <children>
-                                    <Label text="Algorithm:" HBox.hgrow="ALWAYS">
+                                    <Label prefHeight="21.0" prefWidth="147.0" text="Algorithm:" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets right="5.0" />
                                        </HBox.margin>
