@@ -1,7 +1,6 @@
 package pt.up.fe.aiad.scheduler;
 
 import jade.core.AID;
-import javafx.application.Platform;
 import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
@@ -13,6 +12,8 @@ public class ScheduleEvent {
     public ArrayList<AID> _participants;
     public ArrayList<TimeInterval> _availableIntervals; // Domain
     public ArrayList<ScheduleConstraint> _constraints;
+
+    /* private TimeInterval _currentInterval; */
 
     private boolean _initialized = false;
 
@@ -30,7 +31,6 @@ public class ScheduleEvent {
                 System.out.println(a.getName());
             }
         });*/
-
 
         maxBounds = maxInterval;
     }
@@ -69,5 +69,18 @@ public class ScheduleEvent {
     @Override
     public String toString() {
         return _name;
+    }
+
+    public int getCost(TimeInterval interval) {
+        int cost = 0;
+        final int CONSTRAINT_COST = 1;
+
+        for (ScheduleConstraint c : _constraints) {
+            if (!c.isSatisfiedBy(interval)) {
+                cost += CONSTRAINT_COST;
+            }
+        }
+
+        return cost;
     }
 }
