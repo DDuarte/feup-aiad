@@ -2,6 +2,7 @@ package pt.up.fe.aiad.utils;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -112,6 +113,12 @@ public class TimeInterval implements Comparable<TimeInterval> {
         return sd.compareTo(otherSd);
     }
 
+    public TimeInterval getNext() {
+        final int INTERVAL_SLOT = 30 * 60; // 30 minutes
+
+        return new TimeInterval(_startDate + INTERVAL_SLOT, _endDate + INTERVAL_SLOT);
+    }
+
     public static Calendar calendarFromLocalDate(LocalDate lc, int hours, int minutes) {
         if (lc == null)
             return null;
@@ -119,5 +126,16 @@ public class TimeInterval implements Comparable<TimeInterval> {
         Calendar c = Calendar.getInstance();
         c.set(lc.getYear(), lc.getMonthValue()-1, lc.getDayOfMonth(), hours, minutes, 0);
         return c;
+    }
+
+    public static ArrayList<TimeInterval> getPossibleIntervals(long startDate, long endDate, int duration) {
+        ArrayList<TimeInterval> intervals = new ArrayList<>();
+
+        while (startDate < endDate) {
+            intervals.add(new TimeInterval(startDate, startDate + duration));
+            startDate += duration;
+        }
+
+        return intervals;
     }
 }
