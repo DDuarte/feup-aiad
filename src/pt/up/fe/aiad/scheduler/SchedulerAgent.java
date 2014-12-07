@@ -118,10 +118,6 @@ public class SchedulerAgent extends Agent {
         */
     }
 
-    public void addEvent(ScheduleEvent ev) {
-        Platform.runLater(() -> _events.add(ev));
-    }
-
     public void dispatchInvitations(ScheduleEvent ev) {
         Platform.runLater(() -> _invitedTo.add(ev));
 
@@ -137,8 +133,30 @@ public class SchedulerAgent extends Agent {
         }
     }
 
+    public void acceptInvitation(ScheduleEvent ev) {
+        if (_invitedTo.contains(ev)) {
+            Platform.runLater(() -> {
+                _invitedTo.remove(ev);
+                _events.add(ev);
+            });
+        }
+    }
+
     public void rejectInvitation(ScheduleEvent ev) {
         Platform.runLater(() -> _invitedTo.remove(ev));
+        ev._participants.remove(getAID());
+        if (ev._participants.size() > 0) {
+            ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+            ev._participants.forEach(msg::addReceiver);
+
+            msg.setContent("LEAVING-" + ev.getName());
+            msg.setConversationId("schedule-align");
+            send(msg);
+        }
+    }
+
+    public void leaveEvent(ScheduleEvent ev) {
+        Platform.runLater(() -> _events.remove(ev));
         ev._participants.remove(getAID());
         if (ev._participants.size() > 0) {
             ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
