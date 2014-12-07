@@ -21,11 +21,11 @@ public class ABTBehaviour extends SimpleBehaviour {
 
     public ABTBehaviour (/*TreeSet<AID> initialLinks*/) {
         //_links = initialLinks;
-        _agent = (SchedulerAgent) myAgent;
     }
 
     @Override
     public void onStart() {
+        _agent = (SchedulerAgent) myAgent;
         if (_agent._events.isEmpty()) {
             isFinished = true;
             _agent.finishedAlgorithm();
@@ -36,6 +36,8 @@ public class ABTBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
+        if (isFinished)
+            return;
         ACLMessage msg = myAgent.receive();
         if (msg != null) {
             int separatorIndex = msg.getContent().indexOf('-');

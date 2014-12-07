@@ -13,7 +13,7 @@ public class ScheduleEvent {
     public ArrayList<TimeInterval> _availableIntervals; // Domain
     public ArrayList<ScheduleConstraint> _constraints;
 
-    /* private TimeInterval _currentInterval; */
+    public TimeInterval _currentInterval; //null if no solution is found
 
     private boolean _initialized = false;
 

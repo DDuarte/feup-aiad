@@ -67,7 +67,7 @@ public class MainController {
 
             ClientController controller = loader.<ClientController>getController();
             controller.initData(addressSplit[0], Integer.parseInt(addressSplit[1]),
-                    _nicknameTextField.getText(), _algorithmChoiceBox.getValue());
+                    _nicknameTextField.getText(), _algorithmChoiceBox.getValue(), stage);
             controller.start();
 
             stage.show();

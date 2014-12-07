@@ -258,7 +258,7 @@ public class SchedulerAgent extends Agent {
     }
 
     public void finishedAlgorithm() {
-        Platform.runLater(() -> algorithmFinished.set(false));
+        Platform.runLater(() -> algorithmFinished.set(true));
     }
 
     @Override

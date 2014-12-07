@@ -23,6 +23,8 @@ import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.utils.FXUtils;
 
+import java.util.ArrayList;
+
 public class ClientController {
     private String _addressIp;
     private int _port;
@@ -56,7 +58,9 @@ public class ClientController {
     @FXML
     Text _progressBarText;
 
-    public void initData(String addressIp, int port, String nickname, SchedulerAgent.Type algorithm) {
+    private Stage _stage;
+
+    public void initData(String addressIp, int port, String nickname, SchedulerAgent.Type algorithm, final Stage stage) {
         System.out.println("ClientController.initData");
         _addressIp = addressIp;
         _port = port;
@@ -69,6 +73,7 @@ public class ClientController {
         _waitingForOthersText.setVisible(false);
         _algorithmProgress.setVisible(false);
         _progressBarText.setVisible(false);
+        _stage = stage;
     }
 
     public void start() {
@@ -121,7 +126,28 @@ public class ClientController {
 
         _agent.algorithmFinished.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/solution.fxml"));
+                    Stage stage = new Stage();
+                    stage.setTitle("Solution | " + _agent.getLocalName() + " | iScheduler");
+                    Scene scene = new Scene(loader.load());
+                    scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
+                    stage.setScene(scene);
+
+                    SolutionController controller = loader.<SolutionController>getController();
+                    ArrayList<ScheduleEvent> evs = new ArrayList<>();
+                    for (ScheduleEvent ev : _agent._events) {
+                        if (ev._currentInterval != null)
+                            evs.add(ev);
+                    }
+                    controller.initData(evs);
+
+                    stage.show();
+                    _stage.close();
+                }
+                catch (Exception e) {
+                    FXUtils.showExceptionDialog(e);
+                }
             }
         });
     }
