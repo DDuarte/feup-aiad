@@ -1,6 +1,7 @@
 package pt.up.fe.aiad.scheduler.agentbehaviours;
 
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import javafx.application.Platform;
@@ -9,7 +10,9 @@ import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.Serializer;
 
-public class SetupBehaviour extends CyclicBehaviour {
+public class SetupBehaviour extends SimpleBehaviour {
+
+    private boolean isFinished = false;
 
     @Override
     public void action() {
@@ -28,6 +31,17 @@ public class SetupBehaviour extends CyclicBehaviour {
                 else if (msgType.equals("ADDING")) {
                     RegisterEventAddition(msg);
                 }
+                else if (msgType.equals("READY")) {
+                    ((SchedulerAgent) myAgent).readyAgents.add(msg.getSender());
+                    if (((SchedulerAgent) myAgent).readyAgents.containsAll(((SchedulerAgent) myAgent).allAgents)) {
+                        isFinished = true;
+                        Platform.runLater(() -> ((SchedulerAgent) myAgent).allReady.set(true));
+                    }
+                }
+                else if (msgType.equals("CANCEL_READY")) {
+                    ((SchedulerAgent) myAgent).readyAgents.remove(msg.getSender());
+                    isFinished = false;
+                }
                 else {
                     System.err.println("Received an invalid message type.");
                 }
@@ -38,6 +52,11 @@ public class SetupBehaviour extends CyclicBehaviour {
         } else {
             block();
         }
+    }
+
+    @Override
+    public boolean done() {
+        return isFinished;
     }
 
     private void RegisterEventAddition(ACLMessage msg) {
@@ -123,6 +142,8 @@ public class SetupBehaviour extends CyclicBehaviour {
                     .darkStyle()
                     .showInformation();
             ((SchedulerAgent) myAgent)._invitedTo.add(newEv);
+            if (((SchedulerAgent) myAgent).isReady())
+                ((SchedulerAgent) myAgent).cancelReady();
         });
     }
 

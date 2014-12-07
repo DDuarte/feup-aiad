@@ -10,9 +10,11 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.controlsfx.control.Notifications;
+import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
 import pt.up.fe.aiad.scheduler.agentbehaviours.SetupBehaviour;
 
 import java.util.*;
@@ -39,6 +41,12 @@ public class SchedulerAgent extends Agent {
     public ObservableList<String> otherAgents = FXCollections.observableArrayList();
     public Set<AID> allAgents = new TreeSet<>();
     public HashMap<String, AID> agentNameToAid = new HashMap<>();
+
+    public Set<AID> readyAgents = new TreeSet<>();
+
+    public SimpleBooleanProperty isReady = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty allReady = new SimpleBooleanProperty(false);
+    public SimpleBooleanProperty algorithmFinished = new SimpleBooleanProperty(false);
 
     private Type _agentType;
 
@@ -104,18 +112,6 @@ public class SchedulerAgent extends Agent {
         allAgents.add(getAID()); // add self
 
         addBehaviour(new SetupBehaviour());
-
-        /* This must be done only after SETUP phase ends
-        switch (_agentType) {
-            case ABT:
-                addBehaviour(new ABTBehaviour());
-                break;
-            default:
-                System.err.print("Invalid type selected");
-                doDelete();
-                break;
-        }
-        */
     }
 
     public void dispatchInvitations(ScheduleEvent ev) {
@@ -221,6 +217,48 @@ public class SchedulerAgent extends Agent {
         for (ScheduleEvent e : _invitedTo) {
             e._participants.remove(agent);
         }
+        if (readyAgents.contains(agent))
+            readyAgents.remove(agent);
+    }
+
+    public boolean isReady() {
+        return isReady.getValue();
+    }
+
+    public void setReady() {
+        Platform.runLater(() -> isReady.setValue(true));
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+        allAgents.forEach(msg::addReceiver);
+
+        msg.setContent("READY-");
+        msg.setConversationId("schedule-align");
+        send(msg);
+    }
+
+    public void cancelReady() {
+        Platform.runLater(() -> isReady.setValue(false));
+        ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+        allAgents.forEach(msg::addReceiver);
+
+        msg.setContent("CANCEL_READY-");
+        msg.setConversationId("schedule-align");
+        send(msg);
+    }
+
+    public void initializeAlgorithm() {
+        switch (_agentType) {
+            case ABT:
+                addBehaviour(new ABTBehaviour());
+                break;
+            default:
+                System.err.print("Invalid agent type selected");
+                break;
+        }
+
+    }
+
+    public void finishedAlgorithm() {
+        Platform.runLater(() -> algorithmFinished.set(false));
     }
 
     @Override
@@ -231,7 +269,6 @@ public class SchedulerAgent extends Agent {
         } catch (FIPAException fe) {
             Platform.runLater(fe::printStackTrace);
         }
-        //TODO Close the GUI if necessary
 
         // Printout a dismissal message
         try {

@@ -3,12 +3,17 @@ package pt.up.fe.aiad.gui.controllers;
 import jade.core.*;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.action.Action;
@@ -38,6 +43,18 @@ public class ClientController {
     void initialize() {
         System.out.println("ClientController.init");
     }
+    @FXML
+    SplitPane _controlView;
+    @FXML
+    Button _readyButton;
+    @FXML
+    Button _cancelButton;
+    @FXML
+    Text _waitingForOthersText;
+    @FXML
+    ProgressBar _algorithmProgress;
+    @FXML
+    Text _progressBarText;
 
     public void initData(String addressIp, int port, String nickname, SchedulerAgent.Type algorithm) {
         System.out.println("ClientController.initData");
@@ -48,6 +65,10 @@ public class ClientController {
         _allAgents.setItems(_agent.otherAgents);
         _eventsJoined.setItems(_agent._events);
         _eventsInvitedTo.setItems(_agent._invitedTo);
+        _cancelButton.setDisable(true);
+        _waitingForOthersText.setVisible(false);
+        _algorithmProgress.setVisible(false);
+        _progressBarText.setVisible(false);
     }
 
     public void start() {
@@ -70,6 +91,39 @@ public class ClientController {
                 FXUtils.showExceptionDialog(e);
             }
         }
+
+        _agent.isReady.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                _controlView.setDisable(true);
+                _readyButton.setDisable(true);
+                _waitingForOthersText.setVisible(true);
+                _cancelButton.setDisable(false);
+            }
+            else {
+                _controlView.setDisable(false);
+                _readyButton.setDisable(false);
+                _cancelButton.setDisable(true);
+                _waitingForOthersText.setVisible(false);
+            }
+        });
+
+        _agent.allReady.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                _controlView.setDisable(true);
+                _readyButton.setDisable(true);
+                _waitingForOthersText.setVisible(false);
+                _cancelButton.setDisable(true);
+                _algorithmProgress.setVisible(true);
+                _progressBarText.setVisible(true);
+                _agent.initializeAlgorithm();
+            }
+        });
+
+        _agent.algorithmFinished.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                
+            }
+        });
     }
 
     public void stop() {
@@ -198,5 +252,23 @@ public class ClientController {
                     _agent.addAgentToEvent(_allAgents.getSelectionModel().getSelectedItem(), _eventsJoined.getSelectionModel().getSelectedItem());
             }
         }
+    }
+
+    @FXML
+    void agentReady(ActionEvent event) {
+        if (_eventsInvitedTo.getItems().size() > 0) {
+            Dialogs.create()
+                    .owner(null)
+                    .title("Not Ready Yet")
+                    .message("Please reply to your pending invitations first")
+                    .showWarning();
+            return;
+        }
+        _agent.setReady();
+    }
+
+    @FXML
+    void cancelReady(ActionEvent event) {
+        _agent.cancelReady();
     }
 }

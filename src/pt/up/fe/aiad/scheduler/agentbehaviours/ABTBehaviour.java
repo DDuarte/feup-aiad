@@ -2,25 +2,35 @@ package pt.up.fe.aiad.scheduler.agentbehaviours;
 
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import pt.up.fe.aiad.scheduler.Message;
+import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.Serializer;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.Map;
 import java.util.TreeSet;
 
-public class ABTBehaviour extends CyclicBehaviour {
+public class ABTBehaviour extends SimpleBehaviour {
     //TODO private TreeSet<AID> _links;
     //TODO: create agent view and link structure
 
+    private boolean isFinished = false;
+    private SchedulerAgent _agent;
+
     public ABTBehaviour (/*TreeSet<AID> initialLinks*/) {
         //_links = initialLinks;
-
+        _agent = (SchedulerAgent) myAgent;
     }
 
     @Override
     public void onStart() {
+        if (_agent._events.isEmpty()) {
+            isFinished = true;
+            _agent.finishedAlgorithm();
+            return;
+        }
         //TODO initialize variables and send OKAYS
     }
 
@@ -50,6 +60,11 @@ public class ABTBehaviour extends CyclicBehaviour {
         } else {
             block();
         }
+    }
+
+    @Override
+    public boolean done() {
+        return isFinished;
     }
 
     public void SendIsOkay(AID agent, Map<String, TimeInterval> events) {
