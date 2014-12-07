@@ -36,7 +36,12 @@ public class MainController {
     @FXML
     private ChoiceBox<SchedulerAgent.Type> _algorithmChoiceBox;
 
-    private static String _exampleNicknames[] = new String[] { "John", "Ann", "Tom", "Alicia", "Edward", "Sarah" };
+    private static String _exampleNicknames[] = new String[] {
+            "John", "Ann", "Tom", "Alicia", "Edward", "Sarah", "Luis", "Duarte", "Miguel", "Ruben", "Adolf", "Anne", "Frank", "Katie", "Natalie", "Amanda",
+            "Benji", "Makoto", "Yooko", "Kim", "Mallory", "Alex", "Marco", "Polo", "Mike", "Alicia", "Sophia", "Sapphire", "Dovahkin", "Judith",
+            "Ahri", "Morgana", "Leona", "Caytlin", "Katarina", "Galio", "Zelda", "Link", "Red", "Ash", "Mario", "Luigi", "Wario", "Lucina", "Kirby",
+            "Pikachu", "Diglet", "Misty", "Brock"
+    };
 
     @FXML
     void initialize() {
