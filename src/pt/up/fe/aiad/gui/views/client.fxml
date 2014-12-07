@@ -32,8 +32,8 @@
               <children>
                 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Events" textAlignment="CENTER" textFill="$x2" wrapText="false" />
                         <ListView fx:id="_eventsJoined" layoutX="14.0" layoutY="50.0" prefHeight="425.0" prefWidth="251.0" />
-                        <Button layoutX="17.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Edit Event" />
-                        <Button layoutX="166.0" layoutY="500.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="99.0" text="Leave Event" />
+                        <Button layoutX="17.0" layoutY="500.0" mnemonicParsing="false" onAction="#editEvent" prefHeight="31.0" prefWidth="99.0" text="Edit Event" />
+                        <Button layoutX="166.0" layoutY="500.0" mnemonicParsing="false" onAction="#leaveEvent" prefHeight="31.0" prefWidth="99.0" text="Leave Event" />
               </children>
             </AnchorPane>
           </content>

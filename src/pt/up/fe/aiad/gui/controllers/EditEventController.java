@@ -2,6 +2,7 @@ package pt.up.fe.aiad.gui.controllers;
 
 import jade.core.AID;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,10 +14,12 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
+import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.stream.Collectors;
 
@@ -49,8 +52,12 @@ public class EditEventController {
 
     private long _duration;
     private TimeInterval _maxBounds;
+    private ScheduleEvent _ev;
+    private SchedulerAgent _agent;
 
-    public void initData(final Stage stage, ScheduleEvent ev) {
+    public void initData(final Stage stage, ScheduleEvent ev, SchedulerAgent agent) {
+        _agent = agent;
+        _ev = ev;
         _domainView.setItems(_domain.sorted());
         _constraintView.setItems(_constraints);
         _participantsView.setItems(_participants.sorted());
@@ -61,6 +68,7 @@ public class EditEventController {
             _constraints.addAll(ev._constraints);
         } else
             firstTimeSetup = true;
+        _domain.addListener((ListChangeListener<TimeInterval>) c -> validateData());
 
         _participants.addAll(ev._participants.stream().map(AID::getName).collect(Collectors.toList()));
 
@@ -76,10 +84,15 @@ public class EditEventController {
         _minDateTextField.setText(c1.getTime().toString());
         c1.setTimeInMillis(_maxBounds.getEndDate() * 1000);
         _maxDateTextField.setText(c1.getTime().toString());
+
+        validateData();
     }
 
     void validateData() {
         _doneButton.setDisable(true);
+
+        if (_domain.size() <= 0)
+            return;
 
         _doneButton.setDisable(false);
     }
@@ -146,6 +159,22 @@ public class EditEventController {
 
     @FXML
     void cancelEdit() {
+        _stage.close();
+    }
+
+    @FXML
+    void saveEventInfo(ActionEvent event) {
+        ArrayList<TimeInterval> dom = new ArrayList<>();
+        ArrayList<ScheduleConstraint> consts = new ArrayList<>();
+
+        dom.addAll(_domain.stream().collect(Collectors.toList()));
+        consts.addAll(_constraints.stream().collect(Collectors.toList()));
+
+        _ev.initialize(dom, consts);
+        if (firstTimeSetup) {
+            _agent.acceptInvitation(_ev);
+        }
+
         _stage.close();
     }
 }

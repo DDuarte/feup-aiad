@@ -73,7 +73,7 @@
         </Label>
         <Pane prefHeight="45.0" prefWidth="849.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Button fx:id="_doneButton" layoutX="691.0" layoutY="1.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="64.0" text="Done" />
+                  <Button fx:id="_doneButton" layoutX="691.0" layoutY="1.0" mnemonicParsing="false" onAction="#saveEventInfo" prefHeight="31.0" prefWidth="64.0" text="Done" />
                   <Button layoutX="766.0" layoutY="1.0" mnemonicParsing="false" onAction="#cancelEdit" text="Cancel" />
                </children></Pane>
       </children>

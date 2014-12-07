@@ -116,7 +116,7 @@ public class ClientController {
 
 
                 EditEventController controller = loader.<EditEventController>getController();
-                controller.initData(stage, _eventsInvitedTo.getSelectionModel().getSelectedItem());
+                controller.initData(stage, _eventsInvitedTo.getSelectionModel().getSelectedItem(), _agent);
 
                 stage.show();
             } catch (Exception e) {
@@ -139,6 +139,46 @@ public class ClientController {
 
             if (response == Dialog.ACTION_YES) {
                 _agent.rejectInvitation(_eventsInvitedTo.getSelectionModel().getSelectedItem());
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @FXML
+    void leaveEvent(ActionEvent event) {
+
+        if (_eventsJoined.getItems().size() > 0 && _eventsJoined.getSelectionModel().getSelectedItem() != null) {
+            Action response = Dialogs.create()
+                    .owner(null)
+                    .title("Declining Invitation")
+                    .message("Are you sure you want to leave this event?")
+                    .showConfirm();
+
+            if (response == Dialog.ACTION_YES) {
+                _agent.rejectInvitation(_eventsJoined.getSelectionModel().getSelectedItem());
+            }
+        }
+    }
+
+    @FXML
+    void editEvent(ActionEvent event) {
+        if (_eventsJoined.getItems().size() > 0 && _eventsJoined.getSelectionModel().getSelectedItem() != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/editevent.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle(_eventsJoined.getSelectionModel().getSelectedItem().getName());
+                Scene scene = new Scene(loader.load());
+                scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+
+                EditEventController controller = loader.<EditEventController>getController();
+                controller.initData(stage, _eventsJoined.getSelectionModel().getSelectedItem(), _agent);
+
+                stage.show();
+            } catch (Exception e) {
+                FXUtils.showExceptionDialog(e);
             }
         }
     }
