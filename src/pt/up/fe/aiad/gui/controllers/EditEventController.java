@@ -19,6 +19,7 @@ import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.stream.Collectors;
@@ -79,11 +80,13 @@ public class EditEventController {
         long minutes = _duration / 60;
         _durationTextField.setText(Long.toString(minutes / 60) + "h" + Long.toString(minutes % 60) + "m");
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Calendar c1 = Calendar.getInstance();
+
         c1.setTimeInMillis(_maxBounds.getStartDate() * 1000);
-        _minDateTextField.setText(c1.getTime().toString());
+        _minDateTextField.setText(dateFormat.format(c1.getTime()));
         c1.setTimeInMillis(_maxBounds.getEndDate() * 1000);
-        _maxDateTextField.setText(c1.getTime().toString());
+        _maxDateTextField.setText(dateFormat.format(c1.getTime()));
 
         validateData();
     }
