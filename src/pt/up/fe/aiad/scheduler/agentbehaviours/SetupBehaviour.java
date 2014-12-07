@@ -68,7 +68,7 @@ public class SetupBehaviour extends CyclicBehaviour {
                             .title("Agent Joined Event")
                             .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
                             .darkStyle()
-                            .showWarning();
+                            .showInformation();
                 });
             }
         }
@@ -78,7 +78,7 @@ public class SetupBehaviour extends CyclicBehaviour {
                         .title("Agent Joined Event")
                         .text(((SchedulerAgent) myAgent).agentNameToAid.get(agentName).getLocalName() + " has been invited to event " + eventName)
                         .darkStyle()
-                        .showWarning();
+                        .showInformation();
             });
         }
     }
