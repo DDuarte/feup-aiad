@@ -258,7 +258,7 @@ public class SchedulerAgent extends Agent {
                 break;
             case ADOPT:
                 SimpleStringProperty leader = new SimpleStringProperty();
-                addBehaviour(new LeaderElectionBehaviour(new DFSBehaviour(new ADOPTBehaviour(), leader), leader));
+                addBehaviour(new LeaderElectionBehaviour(new DFSBehaviour(_agentType, leader), leader));
                 break;
                 // addBehaviour(new ADOPTBehaviour());
             default:
