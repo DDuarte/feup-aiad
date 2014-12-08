@@ -231,10 +231,6 @@ public class ABTBehaviour extends SimpleBehaviour {
         }
     }
 
-    public ABTBehaviour () {
-
-    }
-
     public static class ABTSelf {
         Variable x;
         ArrayList<TimeInterval> domain;
@@ -274,35 +270,9 @@ public class ABTBehaviour extends SimpleBehaviour {
             return;
         }
 
-
         for (ScheduleEvent ev : _agent._events) {
             _agents.put(ev.getName(), new VirtualAgent(ev, _agent, this));
         }
-
-        /*
-        self.x = new Variable();
-        self.x.agent = myAgent.getAID().getName();
-        self.x.v = null;
-
-        self.nogoods = new ArrayList<>();
-        self.lower_agents = new TreeSet<>();
-        self.agentview = new HashMap<>();
-        self.tag = new TreeSet<>();
-        self.cost = 0;
-        self.exact = true;
-
-        self.domain = _agent._events.get(0)._possibleSolutions;
-
-        for (AID agent : _agent._events.get(0)._participants) {
-            if (_agent.getAID().compareTo(agent) < 0)
-                self.lower_agents.add(agent.getName());
-
-            // if (_agent.getAID().compareTo(agent) > 0)
-            // )    self.agentview.put(agent.getName(), null);
-        }
-
-        adjust_value();
-        */
     }
 
     @Override
