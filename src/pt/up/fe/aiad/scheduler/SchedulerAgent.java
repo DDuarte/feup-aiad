@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import org.controlsfx.control.Notifications;
 import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
 import pt.up.fe.aiad.scheduler.agentbehaviours.ADOPTBehaviour;
+import pt.up.fe.aiad.scheduler.agentbehaviours.DFSBehaviour;
 import pt.up.fe.aiad.scheduler.agentbehaviours.SetupBehaviour;
 
 import java.util.HashMap;
@@ -258,12 +259,13 @@ public class SchedulerAgent extends Agent {
                 addBehaviour(new ABTBehaviour());
                 break;
             case ADOPT:
-                addBehaviour(new ADOPTBehaviour());
+                addBehaviour(new DFSBehaviour(new ADOPTBehaviour()));
+                break;
+                // addBehaviour(new ADOPTBehaviour());
             default:
-                System.err.print("Invalid agent type selected");
+                System.err.println("Invalid agent type selected");
                 break;
         }
-
     }
 
     public void finishedAlgorithm() {
