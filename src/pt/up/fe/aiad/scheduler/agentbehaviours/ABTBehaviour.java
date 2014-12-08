@@ -85,7 +85,7 @@ public class ABTBehaviour extends SimpleBehaviour {
         self.cost = Integer.MAX_VALUE;
 
         for (TimeInterval v : self.domain) {
-            int delta = _agent._events.get(0).getCost(v); /* TODO: ask mike */
+            int delta = _agent._events.get(0).getCost(v);
             int LB = 0;
             TreeSet<String> tag = new TreeSet<>();
             tag.add(_agent.getName());
@@ -93,7 +93,7 @@ public class ABTBehaviour extends SimpleBehaviour {
 
             for (String xj : self.agentview.keySet()) {
                 if (!self.agentview.get(xj).equals(v))
-                    delta += 20; /* TODO: ask mike */
+                    delta += 1000;
             }
 
             for (NoGood ng : self.nogoods) {

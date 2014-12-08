@@ -13,7 +13,7 @@ public class SolutionController {
     public void initData(ArrayList<ScheduleEvent> evs) {
         String solutionText = "";
 
-        if (evs.size() == 0)
+        if (evs.isEmpty())
             solutionText = "No events were allocated for your schedule. At least now you have some free time :)";
         else {
             for (ScheduleEvent ev : evs) {

@@ -136,7 +136,7 @@ public class ClientController {
                     SolutionController controller = loader.<SolutionController>getController();
                     ArrayList<ScheduleEvent> evs = new ArrayList<>();
                     for (ScheduleEvent ev : _agent._events) {
-                        if (ev._currentInterval != null)
+                        if (ev._currentInterval != null && ev._currentCost < 1000)
                             evs.add(ev);
                     }
                     controller.initData(evs);
