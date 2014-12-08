@@ -72,8 +72,8 @@ public class ABTBehaviour extends SimpleBehaviour {
             if (_agent.getAID().compareTo(agent) < 0)
                 self.lower_agents.add(agent.getName());
 
-            if (_agent.getAID().compareTo(agent) > 0)
-                self.agentview.put(agent.getName(), null);
+            // if (_agent.getAID().compareTo(agent) > 0)
+            // )    self.agentview.put(agent.getName(), null);
         }
 
         adjust_value();
@@ -143,6 +143,10 @@ public class ABTBehaviour extends SimpleBehaviour {
     private void terminate(int cost) {
         _agent._events.get(0)._currentInterval = self.x.v;
         _agent._events.get(0)._currentCost = cost;
+
+        if (!self.lower_agents.isEmpty())
+            sendTerminate(cost);
+
         isFinished = true;
         _agent.finishedAlgorithm();
     }
@@ -173,6 +177,16 @@ public class ABTBehaviour extends SimpleBehaviour {
         ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
         msg.addReceiver(new AID(agent, true));
         msg.setContent("LINK-" + json);
+        msg.setConversationId("ABT");
+        getAgent().send(msg);
+    }
+
+    private void sendTerminate(int cost) {
+        ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
+        for (String agent : self.lower_agents) {
+            msg.addReceiver(new AID(agent, true));
+        }
+        msg.setContent("TERM-" + cost);
         msg.setConversationId("ABT");
         getAgent().send(msg);
     }
@@ -224,6 +238,10 @@ public class ABTBehaviour extends SimpleBehaviour {
         adjust_value();
     }
 
+    private void receiveTerminate(int cost) {
+        terminate(cost);
+    }
+
     @Override
     public void action() {
         if (isFinished)
@@ -246,6 +264,8 @@ public class ABTBehaviour extends SimpleBehaviour {
                     case "LINK":
                         receiveAddLink(Serializer.VariableFromJSON(strs[1]));
                         break;
+                    case "TERM":
+                        receiveTerminate(Integer.parseInt(strs[1]));
                     default:
                         System.err.println("Received an invalid message type.");
                         break;
