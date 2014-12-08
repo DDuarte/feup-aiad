@@ -55,33 +55,28 @@ public class DFS2Behaviour extends SimpleBehaviour {
             if (separatorIndex != -1) {
                 String str = msg.getContent();
                 String[] strs = str.split("-", 2);
-                switch (strs[0]) {
-                    case "CHILD":
-                        if (_parentX == null && !_agent.getName().equals(_leader)) {
-                            _openX.remove(yi);
-                            _parentX = yi;
-                        }
-                        else if (_openX.contains(yi)) {
-                            _openX.remove(yi);
-                            _pseudoChildren.add(yi);
-                            sendPseudo(yi);
-                        } else if (!_openX.isEmpty()) {
-                            String n = _openX.first();
-                            _openX.remove(n);
-                            _children.add(n);
-                            sendChild(n);
-                        } else {
-                            sendChild(_parentX);
-                            allFinished = true;
-                        }
-                        break;
-                    case "PSEUDO":
-                        _openX.remove(yi);
-                        _pseudoParents.add(yi);
-                        break;
-                    default:
-                        System.err.println("Received an invalid message type.");
-                        break;
+
+                if (strs[0].equals("CHILD") && _parentX == null && !_agent.getName().equals(_leader)) {
+                    _openX.remove(yi);
+                    _parentX = yi;
+                } else if (strs[0].equals("CHILD") && _openX.contains(yi)) {
+                    _openX.remove(yi);
+                    _pseudoChildren.add(yi);
+                    sendPseudo(yi);
+                }
+
+                if (strs[0].equals("PSEUDO")) {
+                    _openX.remove(yi);
+                    _pseudoParents.add(yi);
+                } else if (!_openX.isEmpty()) {
+                    String n = _openX.first();
+                    _openX.remove(n);
+                    _children.add(n);
+                    sendChild(n);
+                } else {
+                    if (!_agent.getName().equals(_leader))
+                        sendChild(_parentX);
+                    allFinished = true;
                 }
             }
             else {
