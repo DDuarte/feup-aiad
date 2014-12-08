@@ -33,18 +33,12 @@ public class DFSBehaviour extends SimpleBehaviour {
             }
         }
 
-        if (_neighbours.isEmpty()) {
-            allFinished = true;
-        } else {
-            if (_agent.getName().equals(_leader)) {
-                _openX.addAll(_neighbours);
-                String y0 = _openX.first();
-
-                _openX.remove(y0);
-                _children.add(y0);
-
-                sendChild(y0);
-            }
+        _openX.addAll(_neighbours);
+        if (_agent.getName().equals(_leader)) {
+            String n = _openX.first();
+            _openX.remove(n);
+            _children.add(n);
+            sendChild(n);
         }
     }
 
@@ -57,49 +51,36 @@ public class DFSBehaviour extends SimpleBehaviour {
         ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
             String yi = msg.getSender().getName();
-            if (_openX.isEmpty()) {
-                _openX.addAll(_neighbours);
-                _openX.remove(yi);
-                _parentX = yi;
-            } else {
-                int separatorIndex = msg.getContent().indexOf('-');
-                if (separatorIndex != -1) {
-                    String str = msg.getContent();
-                    String[] strs = str.split("-", 2);
-                    switch (strs[0]) {
-                        case "CHILD":
-                            if (_openX.contains(yi)) {
-                                _openX.remove(yi);
-                                _pseudoChildren.add(yi);
-                                sendPseudo(yi);
-                                return;
-                            }
-                            break;
-                        case "PSEUDO":
-                            _children.remove(yi);
-                            _pseudoParents.add(yi);
-                            break;
-                        default:
-                            System.err.println("Received an invalid message type.");
-                            break;
-                    }
+            int separatorIndex = msg.getContent().indexOf('-');
+            if (separatorIndex != -1) {
+                String str = msg.getContent();
+                String[] strs = str.split("-", 2);
+
+                if (strs[0].equals("CHILD") && _parentX == null && !_agent.getName().equals(_leader)) {
+                    _openX.remove(yi);
+                    _parentX = yi;
+                } else if (strs[0].equals("CHILD") && _openX.contains(yi)) {
+                    _openX.remove(yi);
+                    _pseudoChildren.add(yi);
+                    sendPseudo(yi);
                 }
-                else {
-                    System.err.println("Received an invalid message");
+
+                if (strs[0].equals("PSEUDO")) {
+                    _openX.remove(yi);
+                    _pseudoParents.add(yi);
+                } else if (!_openX.isEmpty()) {
+                    String n = _openX.first();
+                    _openX.remove(n);
+                    _children.add(n);
+                    sendChild(n);
+                } else {
+                    if (!_agent.getName().equals(_leader))
+                        sendChild(_parentX);
+                    allFinished = true;
                 }
             }
-
-            if (!_openX.isEmpty()) {
-                String yj = _openX.first();
-                _openX.remove(yi);
-                _children.add(yi);
-                sendChild(yj);
-            } else {
-                if (!_agent.getName().equals(_leader)) {
-                    sendChild(_parentX);
-                }
-
-                allFinished = true;
+            else {
+                System.err.println("Received an invalid message");
             }
         } else {
             block();
