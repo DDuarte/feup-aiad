@@ -1,7 +1,6 @@
 package pt.up.fe.aiad.scheduler.agentbehaviours;
 
 import jade.core.AID;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -9,44 +8,42 @@ import javafx.beans.property.SimpleStringProperty;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TreeSet;
 
 public class DFSBehaviour extends SimpleBehaviour {
-
     private boolean allFinished = false;
     private SchedulerAgent _agent;
-    private Behaviour _nextBehaviour;
+    private SchedulerAgent.Type _type;
 
-    public DFSBehaviour(Behaviour behaviour) {
-        _nextBehaviour = behaviour;
-
-        _leader.addListener((observable, oldValue, newValue) -> {
-            System.err.println(_agent.getName() + " - the new leader is: " + newValue + " - (old: " + oldValue + ")");
-        });
+    public DFSBehaviour(SchedulerAgent.Type type, SimpleStringProperty leader) {
+        _type = type;
+        _leaderProperty = leader;
     }
 
     @Override
     public void onStart() {
         _agent = (SchedulerAgent) myAgent;
+        _leader = _leaderProperty.getValue();
 
         for (ScheduleEvent event : _agent._events) {
             for (AID agent : event._participants) {
-                if (_agent.getAID().compareTo(agent) < 0) {
-                    _lowerAgents.add(agent.getName());
-                } else if (_agent.getAID().compareTo(agent) > 0) {
-                    _upperAgents.add(agent.getName());
+                if (!_agent.getAID().equals(agent)) {
+                    _neighbours.add(agent.getName());
                 }
             }
         }
 
-        if (_upperAgents.isEmpty()) {
-            if (!_lowerAgents.isEmpty()) {
-                sendLeaderPropose(_agent.getName());
-            } else {
-                _leader.setValue(_agent.getName());
-                allFinished = true;
+        if (_neighbours.isEmpty()) {
+            allFinished = true;
+        } else {
+            if (_agent.getName().equals(_leader)) {
+                _openX.addAll(_neighbours);
+                String y0 = _openX.first();
+
+                _openX.remove(y0);
+                _children.add(y0);
+
+                sendChild(y0);
             }
         }
     }
@@ -59,79 +56,78 @@ public class DFSBehaviour extends SimpleBehaviour {
         MessageTemplate mt = MessageTemplate.MatchConversationId("DFS");
         ACLMessage msg = myAgent.receive(mt);
         if (msg != null) {
-            int separatorIndex = msg.getContent().indexOf('-');
-            if (separatorIndex != -1) {
-                String str = msg.getContent();
-                String[] strs = str.split("-", 2);
-                switch (strs[0]) {
-                    case "LEADER_P":
-                        receiveLeaderPropose(msg.getSender().getName(), strs[1]);
-                        break;
-                    case "LEADER_C":
-                        receiveLeaderChoice(strs[1]);
-                        break;
-                    default:
-                        System.err.println("Received an invalid message type.");
-                        break;
+            String yi = msg.getSender().getName();
+            if (_openX.isEmpty()) {
+                _openX.addAll(_neighbours);
+                _openX.remove(yi);
+                _parentX = yi;
+            } else {
+                int separatorIndex = msg.getContent().indexOf('-');
+                if (separatorIndex != -1) {
+                    String str = msg.getContent();
+                    String[] strs = str.split("-", 2);
+                    switch (strs[0]) {
+                        case "CHILD":
+                            if (_openX.contains(yi)) {
+                                _openX.remove(yi);
+                                _pseudoChildren.add(yi);
+                                sendPseudo(yi);
+                                return;
+                            }
+                            break;
+                        case "PSEUDO":
+                            _children.remove(yi);
+                            _pseudoParents.add(yi);
+                            break;
+                        default:
+                            System.err.println("Received an invalid message type.");
+                            break;
+                    }
+                }
+                else {
+                    System.err.println("Received an invalid message");
                 }
             }
-            else {
-                System.err.println("Received an invalid message");
+
+            if (!_openX.isEmpty()) {
+                String yj = _openX.first();
+                _openX.remove(yi);
+                _children.add(yi);
+                sendChild(yj);
+            } else {
+                if (!_agent.getName().equals(_leader)) {
+                    sendChild(_parentX);
+                }
+
+                allFinished = true;
             }
         } else {
             block();
         }
     }
 
-    private Map<String, String> _assignments = new HashMap<>();
-    private TreeSet<String> _lowerAgents = new TreeSet<>();
-    private TreeSet<String> _upperAgents = new TreeSet<>();
-    private SimpleStringProperty _leader = new SimpleStringProperty();
+    private TreeSet<String> _neighbours = new TreeSet<>();
+    private TreeSet<String> _openX = new TreeSet<>();
+    private TreeSet<String> _children = new TreeSet<>();
+    private TreeSet<String> _pseudoChildren = new TreeSet<>();
+    private TreeSet<String> _pseudoParents = new TreeSet<>();
+    private String _parentX;
+    private String _leader;
 
-    private void receiveLeaderPropose(String sender, String agent) {
-        _assignments.put(sender, agent);
+    private SimpleStringProperty _leaderProperty;
 
-        if (_assignments.keySet().containsAll(_upperAgents)) {
-            TreeSet<String> orderedLeaders = new TreeSet<>(_assignments.values());
-            String leader = orderedLeaders.first();
-
-            if (!_lowerAgents.isEmpty()) {
-                sendLeaderPropose(leader);
-            } else if (!_upperAgents.isEmpty()) {
-                _leader.setValue(leader);
-                sendLeaderChoice(leader);
-            }
-        }
-    }
-
-    private void receiveLeaderChoice(String agent) {
-        _leader.setValue(agent);
-
-        if (!_upperAgents.isEmpty()) {
-            sendLeaderChoice(agent);
-        }
-    }
-
-    private void sendLeaderChoice(String leader) {
-        // to upper
-
+    private void sendChild(String agent) {
         ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-        for (String agent : _upperAgents) {
-            msg.addReceiver(new AID(agent, true));
-        }
-        msg.setContent("LEADER_C-" + leader);
+        msg.addReceiver(new AID(agent, true));
+        msg.setContent("CHILD-");
         msg.setConversationId("DFS");
         _agent.send(msg);
     }
 
-    private void sendLeaderPropose(String leader) {
-        // to lower
-
+    private void sendPseudo(String agent) {
         ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
-        for (String agent : _lowerAgents) {
-            msg.addReceiver(new AID(agent, true));
-        }
-        msg.setContent("LEADER_P-" + leader);
+        msg.addReceiver(new AID(agent, true));
+        msg.setContent("PSEUDO-");
         msg.setConversationId("DFS");
         _agent.send(msg);
     }
@@ -139,7 +135,14 @@ public class DFSBehaviour extends SimpleBehaviour {
     @Override
     public boolean done() {
         if (allFinished) {
-            _agent.addBehaviour(_nextBehaviour);
+            switch (_type) {
+                case ADOPT:
+                    _agent.addBehaviour(new ADOPTBehaviour(_leader, _parentX, _children, _pseudoChildren, _pseudoParents));
+                    break;
+                default:
+                    System.err.println("DFSBehaviour: Unhandled type " + _type);
+                    break;
+            }
             return true;
         }
         return false;

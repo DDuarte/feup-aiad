@@ -11,13 +11,11 @@ import jade.lang.acl.ACLMessage;
 import jade.proto.SubscriptionInitiator;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.controlsfx.control.Notifications;
-import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
-import pt.up.fe.aiad.scheduler.agentbehaviours.ADOPTBehaviour;
-import pt.up.fe.aiad.scheduler.agentbehaviours.DFSBehaviour;
-import pt.up.fe.aiad.scheduler.agentbehaviours.SetupBehaviour;
+import pt.up.fe.aiad.scheduler.agentbehaviours.*;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -259,7 +257,8 @@ public class SchedulerAgent extends Agent {
                 addBehaviour(new ABTBehaviour());
                 break;
             case ADOPT:
-                addBehaviour(new DFSBehaviour(new ADOPTBehaviour()));
+                SimpleStringProperty leader = new SimpleStringProperty();
+                addBehaviour(new LeaderElectionBehaviour(new DFSBehaviour(new ADOPTBehaviour(), leader), leader));
                 break;
                 // addBehaviour(new ADOPTBehaviour());
             default:
