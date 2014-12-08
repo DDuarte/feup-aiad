@@ -5,6 +5,7 @@ import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TreeSet;
 
 public class ScheduleEvent {
@@ -64,6 +65,7 @@ public class ScheduleEvent {
                 possibility = possibility.getNext();
             }
         }
+        Collections.reverse(_possibleSolutions);
     }
 
     public boolean isInitialized() {

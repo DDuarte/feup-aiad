@@ -72,7 +72,7 @@ public class ABTBehaviour extends SimpleBehaviour {
                 }
 
                 for (Map.Entry<String, VirtualAgent> others : _masterInstance._agents.entrySet()) {
-                    if (!others.getKey().equals(_event.getName()) && others.getValue().self.x.v != null &&
+                    if (others.getKey().compareTo(_event.getName()) < 0 && others.getValue().self.x.v != null &&
                             others.getValue().self.x.v.overlaps(v))
                         delta += 1000;
                 }
