@@ -5,11 +5,12 @@ import pt.up.fe.aiad.scheduler.constraints.ScheduleConstraint;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class ScheduleEvent {
     private String _name;
     private long _duration; /**< duration in seconds */
-    public ArrayList<AID> _participants;
+    public TreeSet<AID> _participants;
     public ArrayList<TimeInterval> _availableIntervals; // Domain
     public ArrayList<ScheduleConstraint> _constraints;
     public ArrayList<TimeInterval> _possibleSolutions;
@@ -21,7 +22,7 @@ public class ScheduleEvent {
 
     public TimeInterval maxBounds;
 
-    public ScheduleEvent(String name, long duration, ArrayList<AID> participants, TimeInterval maxInterval) {
+    public ScheduleEvent(String name, long duration, TreeSet<AID> participants, TimeInterval maxInterval) {
         _name = name;
         _duration = duration;
         _participants = participants;
@@ -37,7 +38,7 @@ public class ScheduleEvent {
         maxBounds = maxInterval;
     }
 
-    public ScheduleEvent(String name, long duration, ArrayList<AID> participants, ArrayList<TimeInterval> domain, ArrayList<ScheduleConstraint> constraints) {
+    public ScheduleEvent(String name, long duration, TreeSet<AID> participants, ArrayList<TimeInterval> domain, ArrayList<ScheduleConstraint> constraints) {
         _name = name;
         _duration = duration;
         _participants = participants;

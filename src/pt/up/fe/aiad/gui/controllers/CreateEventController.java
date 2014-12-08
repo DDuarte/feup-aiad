@@ -13,8 +13,8 @@ import pt.up.fe.aiad.utils.StringUtils;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class CreateEventController {
@@ -128,7 +128,7 @@ public class CreateEventController {
 
     @FXML
     public void saveEvent(ActionEvent event) {
-        ArrayList<AID> agents = new ArrayList<>();
+        TreeSet<AID> agents = new TreeSet<>();
         agents.add (_agent.getAID());
 
         agents.addAll(_otherAgents.getSelectionModel().getSelectedItems().stream().map(_agent.agentNameToAid::get).collect(Collectors.toList()));

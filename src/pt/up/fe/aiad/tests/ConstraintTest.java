@@ -7,10 +7,9 @@ import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TreeSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ConstraintTest {
 
@@ -135,7 +134,7 @@ public class ConstraintTest {
         constraints.add(new LaterThanConstraint(c2.getTimeInMillis()/1000));
         constraints.add(new EarlierThanConstraint(c2.getTimeInMillis()/1000));
 
-        ScheduleEvent se = new ScheduleEvent("", 0, new ArrayList<>(), ti1);
+        ScheduleEvent se = new ScheduleEvent("", 0, new TreeSet<>(), ti1);
         se.initialize(new ArrayList<>(), new ArrayList<>());
 
         assertEquals(0, se.getCost(ti1));

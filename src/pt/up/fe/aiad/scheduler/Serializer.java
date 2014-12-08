@@ -92,7 +92,7 @@ public class Serializer {
 
         JSONArray names = obj.getJSONArray("participants");
 
-        ArrayList<AID> n = new ArrayList<>();
+        TreeSet<AID> n = new TreeSet<>();
         for (int i=0; i < names.length(); i++) {
             n.add(new AID(names.getString(i), true));
         }

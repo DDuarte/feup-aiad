@@ -9,7 +9,6 @@ import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -92,7 +91,7 @@ public class SerializerTest {
             e.printStackTrace();
         }
 
-        ArrayList<AID> ags = new ArrayList<>();
+        TreeSet<AID> ags = new TreeSet<>();
         ags.add(agent1);ags.add(agent2);ags.add(agent3);ags.add(agent4);
 
         ScheduleEvent ev1 = new ScheduleEvent("cenas", 30*60, ags, new TimeInterval(c1, c2));
