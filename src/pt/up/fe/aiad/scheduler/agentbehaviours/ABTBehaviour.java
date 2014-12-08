@@ -115,22 +115,24 @@ public class ABTBehaviour extends SimpleBehaviour {
         }
 
         if (self.cost != 0 || self.exact) {
-            if (self.agentview.isEmpty()) {
+            if (_agent.getName().equals(_agent.allAgents.first().getName())) {
                 terminate(self.cost);
                 return;
             }
 
-            TreeSet<String> s = new TreeSet<>(self.agentview.keySet());
-            Variable xj = new Variable();
-            xj.agent = s.last();
-            xj.v = self.agentview.get(xj.agent);
-            NoGood ng = new NoGood();
-            ng.v = xj.v;
-            ng.cond = new HashMap<>(self.agentview);
-            ng.cond.remove(xj.agent);
-            ng.tag = self.tag;
-            ng.exact = self.exact;
-            sendNoGood(xj.agent, ng);
+            if (!self.agentview.isEmpty()) {
+                TreeSet<String> s = new TreeSet<>(self.agentview.keySet());
+                Variable xj = new Variable();
+                xj.agent = s.last();
+                xj.v = self.agentview.get(xj.agent);
+                NoGood ng = new NoGood();
+                ng.v = xj.v;
+                ng.cond = new HashMap<>(self.agentview);
+                ng.cond.remove(xj.agent);
+                ng.tag = self.tag;
+                ng.exact = self.exact;
+                sendNoGood(xj.agent, ng);
+            }
         }
 
         if (!self.x.v.equals(old_value)) {
@@ -266,6 +268,7 @@ public class ABTBehaviour extends SimpleBehaviour {
                         break;
                     case "TERM":
                         receiveTerminate(Integer.parseInt(strs[1]));
+                        break;
                     default:
                         System.err.println("Received an invalid message type.");
                         break;

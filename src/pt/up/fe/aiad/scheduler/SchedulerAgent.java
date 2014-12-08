@@ -42,7 +42,7 @@ public class SchedulerAgent extends Agent {
      * All agent names excluding self
      */
     public ObservableList<String> otherAgents = FXCollections.observableArrayList();
-    public Set<AID> allAgents = new TreeSet<>();
+    public TreeSet<AID> allAgents = new TreeSet<>();
     public HashMap<String, AID> agentNameToAid = new HashMap<>();
 
     public Set<AID> readyAgents = new TreeSet<>();
