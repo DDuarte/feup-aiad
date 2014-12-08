@@ -92,7 +92,8 @@ public class ABTBehaviour extends SimpleBehaviour {
             boolean exact = true;
 
             for (String xj : self.agentview.keySet()) {
-                delta += 0; /* TODO: ask mike */
+                if (!self.agentview.get(xj).equals(v))
+                    delta += 20; /* TODO: ask mike */
             }
 
             for (NoGood ng : self.nogoods) {
