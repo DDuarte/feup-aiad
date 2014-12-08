@@ -255,7 +255,7 @@ public class ABTBehaviour extends SimpleBehaviour {
             int separatorIndex = msg.getContent().indexOf('-');
             if (separatorIndex != -1) {
                 String str = msg.getContent();
-                String[] strs = str.split("-", 1);
+                String[] strs = str.split("-", 2);
                 switch (strs[0]) {
                     case "OK?":
                         receiveOk(Serializer.VariableFromJSON(strs[1]));
