@@ -132,6 +132,7 @@ public class ABTBehaviour extends SimpleBehaviour {
                 ng.cond.remove(xj.agent);
                 ng.tag = self.tag;
                 ng.exact = self.exact;
+                ng.cost = self.cost;
                 sendNoGood(xj.agent, ng);
             }
         }
