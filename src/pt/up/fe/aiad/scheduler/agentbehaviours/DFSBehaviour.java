@@ -66,9 +66,10 @@ public class DFSBehaviour extends SimpleBehaviour {
                 }
 
                 if (strs[0].equals("PSEUDO")) {
-                    _openX.remove(yi);
+                    _children.remove(yi);
                     _pseudoParents.add(yi);
-                } else if (!_openX.isEmpty()) {
+                }
+                if (!_openX.isEmpty()) {
                     String n = _openX.first();
                     _openX.remove(n);
                     _children.add(n);
