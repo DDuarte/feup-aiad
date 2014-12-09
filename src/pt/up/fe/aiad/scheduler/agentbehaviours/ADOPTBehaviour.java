@@ -84,18 +84,22 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
     }
 
-    public ADOPTBehaviour(String leader, HashMap<String, DFSBehaviour.VirtualAgent> agents) {
+    private String _leader;
+    private HashMap<String, DFSBehaviour.VirtualAgent> _agentsDFS;
 
-        for (Map.Entry<String, DFSBehaviour.VirtualAgent> a : agents.entrySet()) {
-            _virtualAgents.put(a.getKey(), new VirtualAgent(a.getValue()._event, _agent,
-                    this, a.getValue(), leader));
-        }
+    public ADOPTBehaviour(String leader, HashMap<String, DFSBehaviour.VirtualAgent> agents) {
+        _leader = leader;
+        _agentsDFS = agents;
     }
 
     @Override
     public void onStart() {
         _agent = (SchedulerAgent) myAgent;
 
+        for (Map.Entry<String, DFSBehaviour.VirtualAgent> a : _agentsDFS.entrySet()) {
+            _virtualAgents.put(a.getKey(), new VirtualAgent(a.getValue()._event, _agent,
+                    this, a.getValue(), _leader));
+        }
 
         if (_agent._events.isEmpty()) {
             allFinished = true;
