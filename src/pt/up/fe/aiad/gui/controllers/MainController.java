@@ -63,7 +63,7 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../views/client.fxml"));
             Stage stage = new Stage();
-            stage.setTitle(_nicknameTextField.getText() + " | iScheduler");
+            stage.setTitle(_nicknameTextField.getText() + " | " + _algorithmChoiceBox.getValue() + " | iScheduler");
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("../views/main.css").toExternalForm());
             stage.setScene(scene);
