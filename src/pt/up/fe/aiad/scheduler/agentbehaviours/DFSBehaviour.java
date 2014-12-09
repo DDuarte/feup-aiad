@@ -58,6 +58,10 @@ public class DFSBehaviour extends SimpleBehaviour {
             }
         }
 
+        public String getName() {
+            return _masterAgent.getName() + "-" + _event.getName();
+        }
+
         private void sendChild(String agent /* A-1 */) {
 
             String[] name = agent.split("-", 2);
@@ -106,7 +110,7 @@ public class DFSBehaviour extends SimpleBehaviour {
                 yi += "-" + strs[1];
                 String name = strs[2];
 
-                if (strs[0].equals("CHILD") && _virtualAgents.get(name)._parentX == null && !_agent.getName().equals(_leader)) {
+                if (strs[0].equals("CHILD") && _virtualAgents.get(name)._parentX == null && !_virtualAgents.get(name).getName().equals(_leader)) {
                     _virtualAgents.get(name)._openX.remove(yi);
                     _virtualAgents.get(name)._parentX = yi;
                 } else if (strs[0].equals("CHILD") && _virtualAgents.get(name)._openX.contains(yi)) {
@@ -125,7 +129,7 @@ public class DFSBehaviour extends SimpleBehaviour {
                     _virtualAgents.get(name). _children.add(n);
                     _virtualAgents.get(name).sendChild(n);
                 } else {
-                    if (!_agent.getName().equals(_leader))
+                    if (!_virtualAgents.get(name).getName().equals(_leader))
                         _virtualAgents.get(name).sendChild(_virtualAgents.get(name)._parentX);
                     _virtualAgents.get(name)._finished = true;
                 }
