@@ -42,11 +42,15 @@ public class DFSBehaviour extends SimpleBehaviour {
             _masterAgent = schedulerAgent;
             String thisName = _masterAgent.getName() + "-" + _event.getName();
 
+            for (AID agent : _event._participants) {
+                if (!agent.equals(_masterAgent.getAID())) {
+                    _neighbours.add(agent.getName() + "-" + scheduleEvent.getName()); // == constraints
+                }
+            }
+
             for (ScheduleEvent event : _masterAgent._events) {
-                for (AID agent : event._participants) {
-                    if (!thisName.equals(agent.getName() + "-" + event.getName())) {
-                        _neighbours.add(agent.getName() + "-" + event.getName());
-                    }
+                if (!event.getName().equals(_event.getName())) {
+                    _neighbours.add(_masterAgent.getName() + "-" + event.getName()); // != constrains
                 }
             }
 
