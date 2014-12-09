@@ -40,17 +40,18 @@ public class DFSBehaviour extends SimpleBehaviour {
             _masterInstance = masterInstance;
             _event = scheduleEvent;
             _masterAgent = schedulerAgent;
+            String thisName = _masterAgent.getName() + "-" + _event.getName();
 
             for (ScheduleEvent event : _masterAgent._events) {
                 for (AID agent : event._participants) {
-                    if (!_masterAgent.getAID().equals(agent)) {
+                    if (!thisName.equals(agent.getName() + "-" + event.getName())) {
                         _neighbours.add(agent.getName() + "-" + event.getName());
                     }
                 }
             }
 
             _openX.addAll(_neighbours);
-            if ((_masterAgent.getName() + "-" + _event.getName()).equals(_masterInstance._leader)) {
+            if (thisName.equals(_masterInstance._leader)) {
                 String n = _openX.first();
                 _openX.remove(n);
                 _children.add(n);
@@ -89,7 +90,7 @@ public class DFSBehaviour extends SimpleBehaviour {
     @Override
     public void onStart() {
         _agent = (SchedulerAgent) myAgent;
-        _leader = _leaderProperty.getValue() + "-" + _agent._events.get(0).getName();
+        _leader = _leaderProperty.getValue();
 
         for (ScheduleEvent ev : _agent._events) {
             _virtualAgents.put(_agent.getName() + "-" + ev.getName(), new VirtualAgent(ev, _agent, this));
@@ -117,16 +118,18 @@ public class DFSBehaviour extends SimpleBehaviour {
                     _virtualAgents.get(name)._openX.remove(yi);
                     _virtualAgents.get(name)._pseudoChildren.add(yi);
                     _virtualAgents.get(name).sendPseudo(yi);
+                    return;
                 }
+
 
                 if (strs[0].equals("PSEUDO")) {
                     _virtualAgents.get(name)._children.remove(yi);
-                    _virtualAgents.get(name). _pseudoParents.add(yi);
+                    _virtualAgents.get(name)._pseudoParents.add(yi);
                 }
                 if (!_virtualAgents.get(name)._openX.isEmpty()) {
                     String n = _virtualAgents.get(name)._openX.first();
                     _virtualAgents.get(name)._openX.remove(n);
-                    _virtualAgents.get(name). _children.add(n);
+                    _virtualAgents.get(name)._children.add(n);
                     _virtualAgents.get(name).sendChild(n);
                 } else {
                     if (!_virtualAgents.get(name).getName().equals(_leader))
