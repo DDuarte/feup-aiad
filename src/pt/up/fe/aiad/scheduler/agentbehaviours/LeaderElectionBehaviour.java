@@ -42,9 +42,9 @@ public class LeaderElectionBehaviour extends SimpleBehaviour {
 
         if (_upperAgents.isEmpty()) {
             if (!_lowerAgents.isEmpty()) {
-                sendLeaderPropose(_agent.getName());
+                sendLeaderPropose(_agent.getName() + "-" + _agent._events.get(0).getName());
             } else {
-                _leader.setValue(_agent.getName());
+                _leader.setValue(_agent.getName() + "-" + _agent._events.get(0).getName());
                 allFinished = true;
             }
         }

@@ -3,9 +3,13 @@ package pt.up.fe.aiad.scheduler.agentbehaviours;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
+import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 
 public class ADOPTBehaviour extends SimpleBehaviour {
@@ -13,29 +17,85 @@ public class ADOPTBehaviour extends SimpleBehaviour {
     private boolean allFinished = false;
     private SchedulerAgent _agent;
 
-    private TreeSet<String> _children = new TreeSet<>();
-    private TreeSet<String> _pseudoChildren = new TreeSet<>();
-    private TreeSet<String> _pseudoParents = new TreeSet<>();
-    private String _parentX;
-    private String _leader;
+    public HashMap<String, VirtualAgent> _virtualAgents = new HashMap<>();
 
-    public ADOPTBehaviour(String leader, String parent, TreeSet<String> children, TreeSet<String> pseudoChildren, TreeSet<String> pseudoParents) {
-        _leader = leader;
-        _parentX = parent;
-        _children = children;
-        _pseudoChildren = pseudoChildren;
-        _pseudoParents = pseudoParents;
+    public static class VirtualAgent {
+
+        ScheduleEvent _event;
+        SchedulerAgent _masterAgent;
+        private final ADOPTBehaviour _masterInstance;
+
+        private TreeSet<String> _children = new TreeSet<>();
+        private TreeSet<String> _pseudoChildren = new TreeSet<>();
+        private TreeSet<String> _pseudoParents = new TreeSet<>();
+        private String _parentX;
+        private String _leader;
+
+        HashMap<String, VirtualAgent> _agents;
+        int threshold;
+        TimeInterval di;
+        HashMap<String, TimeInterval> CurrentContext; // agent -> time
+        HashMap<TimeInterval, HashMap<String, Integer>> lb;
+        HashMap<TimeInterval, HashMap<String, Integer>> ub;
+        HashMap<TimeInterval, HashMap<String, Integer>> t;
+        HashMap<TimeInterval, HashMap<String, HashMap<String, TimeInterval>>> context; // D -> child -> context (agent -> timeInterval)
+
+        public VirtualAgent(ScheduleEvent scheduleEvent, SchedulerAgent schedulerAgent, ADOPTBehaviour masterInstance,
+                            DFSBehaviour.VirtualAgent va, String leader) {
+            _event = scheduleEvent;
+            _masterAgent = schedulerAgent;
+            _masterInstance = masterInstance;
+
+            _leader = leader;
+            _parentX = va._parentX;
+            _children = va._children;
+            _pseudoChildren = va._pseudoChildren;
+            _pseudoParents = va._pseudoParents;
+
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
+        }
+
+        int delta(TimeInterval v) {
+            int d = _event.getCost(v);
+
+            for (Map.Entry<String, TimeInterval> xj : CurrentContext.entrySet()) {
+                if (!xj.getValue().equals(v))
+                    d += 1000;
+            }
+
+            for (Map.Entry<String, VirtualAgent> others : _agents.entrySet()) {
+                if (others.getKey().compareTo(_event.getName()) < 0 && others.getValue().di != null &&
+                        others.getValue().di.overlaps(v))
+                    d += 1000;
+            }
+
+            return d;
+        }
+
+        int LB(TimeInterval v) {
+            int c = delta(v);
+
+            // for (String xl : )
+            return c;
+        }
+    }
+
+    public ADOPTBehaviour(String leader, HashMap<String, DFSBehaviour.VirtualAgent> agents) {
+
+        for (Map.Entry<String, DFSBehaviour.VirtualAgent> a : agents.entrySet()) {
+            _virtualAgents.put(a.getKey(), new VirtualAgent(a.getValue()._event, _agent,
+                    this, a.getValue(), leader));
+        }
     }
 
     @Override
     public void onStart() {
         _agent = (SchedulerAgent) myAgent;
 
-        System.err.println("ADOPT(" + _agent.getLocalName() + "): leader: " + _leader);
-        System.err.println("ADOPT(" + _agent.getLocalName() + "): parent: " + _parentX);
-        System.err.println("ADOPT(" + _agent.getLocalName() + "): children: " +  Arrays.toString(_children.toArray()));
-        System.err.println("ADOPT(" + _agent.getLocalName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
-        System.err.println("ADOPT(" + _agent.getLocalName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
 
         if (_agent._events.isEmpty()) {
             allFinished = true;
