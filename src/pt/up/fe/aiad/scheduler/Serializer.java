@@ -4,11 +4,46 @@ import jade.core.AID;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
+import pt.up.fe.aiad.scheduler.agentbehaviours.ADOPTBehaviour;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.*;
 
 public class Serializer {
+
+    public static String CostToJSON(ADOPTBehaviour.Cost c) {
+        JSONObject condObj = new JSONObject();
+        for (Map.Entry<String, TimeInterval> e : c.context.entrySet()) {
+            condObj.put(e.getKey(), e.getValue().toString(true));
+        }
+
+        JSONObject obj = new JSONObject()
+                .put("sender", c.sender)
+                .put("context", condObj)
+                .put("lb", c.lb)
+                .put("ub", c.ub);
+
+        return obj.toString();
+    }
+
+    public static ADOPTBehaviour.Cost CostFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+
+        ADOPTBehaviour.Cost cost = new ADOPTBehaviour.Cost();
+
+        cost.sender = obj.getString("sender");
+        cost.context = new HashMap<>();
+        JSONObject contextObj = obj.getJSONObject("context");
+        Iterator<String> itr = contextObj.keys();
+        while (itr.hasNext()) {
+            String name = itr.next();
+            cost.context.put(name, new TimeInterval(contextObj.getString(name)));
+        }
+        cost.lb = obj.getInt("lb");
+        cost.ub = obj.getInt("ub");
+
+        return cost;
+    }
 
     public static ABTBehaviour.NoGood NoGoodFromJSON(String json) {
         JSONObject obj = new JSONObject(json);
@@ -99,54 +134,4 @@ public class Serializer {
 
         return new ScheduleEvent(obj.getString("name"), obj.getLong("duration"), n, new TimeInterval(obj.getString("maxbounds")));
     }
-
-    /*
-                                    /* eventName - timeInterval *
-    public static String EventsToJSON(Map<String, TimeInterval> events) {
-        JSONObject obj = new JSONObject();
-
-        for (Map.Entry<String, TimeInterval> entry : events.entrySet()) {
-            obj.put(entry.getKey(), entry.getValue().toString(true));
-        }
-
-        return obj.toString();
-    }
-
-    public static Map<String, TimeInterval> EventsFromJSON(String json) {
-        Map<String, TimeInterval> events = new HashMap<>();
-
-        JSONObject obj = new JSONObject(json);
-        Iterator<String> itr = obj.keys();
-
-        while (itr.hasNext()) {
-            String name = itr.next();
-            events.put(name, new TimeInterval(obj.getString(name)));
-        }
-
-        return events;
-    }
-
-    public static String EventsAgentViewToJSON(Map<AID, Map<String, TimeInterval>> eventsAgentView) {
-        JSONObject obj = new JSONObject();
-
-        for (Map.Entry<AID, Map<String, TimeInterval>> entry : eventsAgentView.entrySet()) {
-            obj.put(entry.getKey().getName(), EventsToJSON(entry.getValue()));
-        }
-
-        return obj.toString();
-    }
-
-    public static Map<AID, Map<String, TimeInterval>> EventsAgentViewFromJSON(String json) {
-        Map<AID, Map<String, TimeInterval>> events = new HashMap<>();
-
-        JSONObject obj = new JSONObject(json);
-        Iterator<String> itr = obj.keys();
-
-        while (itr.hasNext()) {
-            String name = itr.next();
-            events.put(new AID(name, true), EventsFromJSON(obj.getString(name)));
-        }
-
-        return events;
-    }*/
 }

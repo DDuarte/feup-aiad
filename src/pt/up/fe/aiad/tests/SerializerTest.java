@@ -5,6 +5,7 @@ import org.junit.Test;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.Serializer;
 import pt.up.fe.aiad.scheduler.agentbehaviours.ABTBehaviour;
+import pt.up.fe.aiad.scheduler.agentbehaviours.ADOPTBehaviour;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.text.ParseException;
@@ -147,5 +148,32 @@ public class SerializerTest {
 
         assertEquals(var2.v, var.v);
         assertEquals(var2.agent, var.agent);
+    }
+
+    @Test
+    public void testCostJSON() {
+        ADOPTBehaviour.Cost cost = new ADOPTBehaviour.Cost();
+
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+        Calendar c3 = Calendar.getInstance(); c3.set(2004, Calendar.JANUARY, 31, 18, 35);
+        TimeInterval t1 = new TimeInterval(c1, c2);
+        TimeInterval t2 = new TimeInterval(c2, c3);
+
+        cost.sender= "Agent1@192.168.23.52:1099/JADE-Dancing";
+        cost.context = new HashMap<>();
+        cost.context.put("Agent1@192.168.23.52:1099/JADE-Swimming", t1);
+        cost.context.put("Agent2@192.168.23.52:1099/JADE-Dancing", t2);
+        cost.lb = 3;
+        cost.ub = 400;
+
+        String json = Serializer.CostToJSON(cost);
+
+        ADOPTBehaviour.Cost cost2 = Serializer.CostFromJSON(json);
+        assertEquals(cost.sender, cost2.sender);
+        assertEquals(cost.lb, cost2.lb);
+        assertEquals(cost.ub, cost2.ub);
+        assertEquals(t1, cost2.context.get("Agent1@192.168.23.52:1099/JADE-Swimming"));
+        assertEquals(t2, cost2.context.get("Agent2@192.168.23.52:1099/JADE-Dancing"));
     }
 }
