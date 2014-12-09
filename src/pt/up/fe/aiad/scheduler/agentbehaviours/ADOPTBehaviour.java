@@ -45,6 +45,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             _event = scheduleEvent;
             _masterAgent = schedulerAgent;
             _masterInstance = masterInstance;
+            _agents = _masterInstance._virtualAgents;
 
             _leader = leader;
             _parentX = va._parentX;
@@ -52,11 +53,53 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             _pseudoChildren = va._pseudoChildren;
             _pseudoParents = va._pseudoParents;
 
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
+            threshold = 0;
+            CurrentContext = new HashMap<>();
+
+            lb = new HashMap<>();
+            ub = new HashMap<>();
+            t = new HashMap<>();
+            context = new HashMap<>();
+
+            for (TimeInterval d : _event._possibleSolutions) {
+                HashMap<String, Integer> childLbs = new HashMap<>();
+                HashMap<String, Integer> childT = new HashMap<>();
+                HashMap<String, Integer> childUbs = new HashMap<>();
+                HashMap<String, HashMap<String, TimeInterval>> childContexts = new HashMap<>();
+                for (String xl : _children) {
+                    childLbs.put(xl, 0);
+                    childT.put(xl, 0);
+                    childUbs.put(xl, Integer.MAX_VALUE);
+                    childContexts.put(xl, new HashMap<>());
+                }
+                lb.put(d, childLbs);
+                t.put(d, childT);
+                ub.put(d, childUbs);
+                context.put(d, childContexts);
+            }
+
+            di = _event._possibleSolutions.get(0);
+            int currentDelta = delta(di);
+
+            for (TimeInterval d : _event._possibleSolutions) {
+                int tempDelta = delta(d);
+                if (tempDelta < currentDelta) {
+                    di = d;
+                    currentDelta = tempDelta;
+                }
+                if (currentDelta == 0) {
+                    break;
+                }
+            }
+
+            backTrack();
+
+            /*System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
+            */
         }
 
         int delta(TimeInterval v) {
@@ -79,8 +122,29 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         int LB(TimeInterval v) {
             int c = delta(v);
 
-            // for (String xl : )
+            for (String xl : _children) {
+                c += lb.get(v).get(xl);
+            }
             return c;
+        }
+
+        int UB(TimeInterval v) {
+            int c = delta(v);
+
+            for (String xl : _children) {
+                c += ub.get(v).get(xl);
+            }
+            return c;
+        }
+
+        void backTrack() {
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
+            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): my Di is : " + di.toString() + " with cost " + delta(di));
+
         }
     }
 
@@ -96,18 +160,20 @@ public class ADOPTBehaviour extends SimpleBehaviour {
     public void onStart() {
         _agent = (SchedulerAgent) myAgent;
 
-        for (Map.Entry<String, DFSBehaviour.VirtualAgent> a : _agentsDFS.entrySet()) {
-            _virtualAgents.put(a.getKey(), new VirtualAgent(a.getValue()._event, _agent,
-                    this, a.getValue(), _leader));
-        }
-
         if (_agent._events.isEmpty()) {
             allFinished = true;
             _agent.finishedAlgorithm();
             return;
         }
 
-        // TODO
+        TreeSet<String> orderedEventNames = new TreeSet<>(_agentsDFS.keySet()); //because delta depends on overlapping events this order is necessary the first time
+        for (String ev : orderedEventNames) {
+            DFSBehaviour.VirtualAgent ag = _agentsDFS.get(ev);
+            _virtualAgents.put(ev.split("-",2)[1], new VirtualAgent(ag._event, _agent,
+                    this, ag, _leader));
+        }
+
+
     }
 
     @Override
