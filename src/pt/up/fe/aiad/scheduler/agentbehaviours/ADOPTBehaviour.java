@@ -204,6 +204,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 if (_receivedTerminateFromParent || _leader.equals(_masterAgent.getName()+ "-" + _event.getName())) {
                     sendTerminate();
                     _isFinished = true;
+                    _event._currentInterval = di;
+                    _event._currentCost = LB(di);
                     _masterInstance.checkFinished();
                     return;
                 }
@@ -457,6 +459,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             CurrentContext = context;
             _receivedTerminateFromParent = true;
             _isFinished = true;
+            _event._currentInterval = di;
+            _event._currentCost = LB(di);
             _masterInstance.checkFinished();
             backTrack();
         }
