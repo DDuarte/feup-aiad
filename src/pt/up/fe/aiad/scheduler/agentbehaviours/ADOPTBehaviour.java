@@ -48,7 +48,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         private String _parentX;
         private String _leader;
         private boolean _receivedTerminateFromParent = false;
-        private boolean _isFinished = true;
+        private boolean _isFinished = false;
 
         HashMap<String, VirtualAgent> _agents;
         int threshold;
@@ -542,6 +542,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
 
     @Override
     public boolean done() {
+        if (allFinished)
+            _agent.finishedAlgorithm();
         return allFinished;
     }
 
