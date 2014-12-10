@@ -112,14 +112,16 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 }
             }
 
-            backTrack();
-
             /*System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
             */
+
+            backTrack();
+
+
         }
 
         int delta(TimeInterval v) {
@@ -130,11 +132,11 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                     d += 1000;
             }
 
-            for (Map.Entry<String, VirtualAgent> others : _agents.entrySet()) {
-                if (others.getKey().compareTo(_event.getName()) < 0 && others.getValue().di != null &&
-                        others.getValue().di.overlaps(v))
+            for (Map.Entry<String, TimeInterval> xj : CurrentContext.entrySet()) {
+                if (xj.getKey().split("-", 2)[0].equals(_masterAgent.getName()) && !xj.getKey().split("-", 2)[1].equals(_event.getName()) && xj.getValue().overlaps(v))
                     d += 1000;
             }
+
 
             return d;
         }
@@ -458,10 +460,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         public void receiveTerminate(HashMap<String, TimeInterval> context) {
             CurrentContext = context;
             _receivedTerminateFromParent = true;
-            _isFinished = true;
             _event._currentInterval = di;
             _event._currentCost = LB(di);
-            _masterInstance.checkFinished();
             backTrack();
         }
 
@@ -520,19 +520,23 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 String[] strs = str.split("-", 3);
                 switch (strs[0]) {
                     case "COST":
-                        _virtualAgents.get(strs[1]).receiveCost(Serializer.CostFromJSON(strs[2]));
+                        if (!_virtualAgents.get(strs[1])._isFinished)
+                            _virtualAgents.get(strs[1]).receiveCost(Serializer.CostFromJSON(strs[2]));
                         break;
                     case "VALUE":
-                        _virtualAgents.get(strs[1]).receiveValue(Serializer.ValueFromJSON(strs[2]));
+                        if (!_virtualAgents.get(strs[1])._isFinished)
+                            _virtualAgents.get(strs[1]).receiveValue(Serializer.ValueFromJSON(strs[2]));
                         break;
                     case "THRESHOLD":
-                        _virtualAgents.get(strs[1]).receiveThreshold(Serializer.ThresholdFromJSON(strs[2]));
+                        if (!_virtualAgents.get(strs[1])._isFinished)
+                            _virtualAgents.get(strs[1]).receiveThreshold(Serializer.ThresholdFromJSON(strs[2]));
                         break;
                     case "TERMINATE":
-                        _virtualAgents.get(strs[1]).receiveTerminate(Serializer.ContextFromJSON(strs[2]));
+                        if (!_virtualAgents.get(strs[1])._isFinished)
+                            _virtualAgents.get(strs[1]).receiveTerminate(Serializer.ContextFromJSON(strs[2]));
                         break;
                     default:
-                        System.err.println("Received an invalid message type.");
+                        //System.err.println("Received an invalid message type: " + strs[0]);
                         break;
                 }
             }
