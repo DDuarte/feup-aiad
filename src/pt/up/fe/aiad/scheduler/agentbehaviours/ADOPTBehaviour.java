@@ -119,9 +119,9 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
             */
 
-            backTrack();
-
-
+            //backTrack();
+            chooseDiForMinLB();
+            sendValue();
         }
 
         int delta(TimeInterval v) {
