@@ -38,6 +38,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
 
     public static class VirtualAgent {
 
+        private int _receivedMessages;
+        private int _sentMessages;
         ScheduleEvent _event;
         SchedulerAgent _masterAgent;
         private final ADOPTBehaviour _masterInstance;
@@ -202,6 +204,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             sendValue();
             maintainAllocationInvariant();
 
+
             if (threshold == tempUB) {
                 if (_receivedTerminateFromParent || _leader.equals(_masterAgent.getName()+ "-" + _event.getName())) {
                     sendTerminate();
@@ -325,6 +328,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
                 ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
                 for (String ag : ea.getValue()) {
+                    _sentMessages++;
                     msg.addReceiver(new AID(ag, true));
                 }
                 msg.setContent("VALUE-" + ea.getKey() + "-" + json);
@@ -355,15 +359,19 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
                 ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
                 for (String ag : ea.getValue()) {
+                    _sentMessages++;
                     msg.addReceiver(new AID(ag, true));
                 }
                 msg.setContent("TERMINATE-" + ea.getKey() + "-" + json);
                 msg.setConversationId("ADOPT");
                 _masterAgent.send(msg);
             }
+
+            System.err.println(_masterAgent.getName()+"-"+_event.getName()+" terminating after receiving " + _receivedMessages + " messages and sending " + _sentMessages);
         }
 
         private void sendCost() {
+            _sentMessages++;
             //  SEND (COST, xi, CurrentContext, LB,UB) to parent
             if (_parentX == null) //root
                 return;
@@ -385,6 +393,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         private void sendThreshold() {
             //SEND (THRESHOLD, t(di, xl), CurrentContext ) to each child xl
             for (String xl : _children) {
+                _sentMessages++;
+
                 Threshold thresh = new Threshold();
                 thresh.context = CurrentContext;
                 thresh.t = t.get(di).get(xl);
@@ -400,6 +410,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveCost(Cost cost) {
+            _receivedMessages++;
             String thisName = _masterAgent.getName()+"-"+_event.getName();
             TimeInterval d = cost.context.get(thisName);
             cost.context.remove(thisName);
@@ -432,6 +443,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveValue(Value value) {
+            _receivedMessages++;
             if (!_receivedTerminateFromParent) {
                 CurrentContext.put(value.sender, value.chosenValue);
                 for (TimeInterval d : _event._possibleSolutions) {
@@ -450,6 +462,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveThreshold(Threshold thresh) {
+            _receivedMessages++;
             if (compatibleContexts(thresh.context, CurrentContext)) {
                 threshold = thresh.t;
                 maintainThresholdInvariant();
@@ -458,10 +471,9 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveTerminate(HashMap<String, TimeInterval> context) {
+            _receivedMessages++;
             CurrentContext = context;
             _receivedTerminateFromParent = true;
-            _event._currentInterval = di;
-            _event._currentCost = LB(di);
             backTrack();
         }
 
@@ -550,8 +562,9 @@ public class ADOPTBehaviour extends SimpleBehaviour {
 
     @Override
     public boolean done() {
-        if (allFinished)
+        if (allFinished) {
             _agent.finishedAlgorithm();
+        }
         return allFinished;
     }
 
