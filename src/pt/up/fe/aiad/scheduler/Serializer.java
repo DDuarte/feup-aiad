@@ -11,6 +11,74 @@ import java.util.*;
 
 public class Serializer {
 
+    public static String ContextToJSON(HashMap<String, TimeInterval> context) {
+        JSONObject condObj = new JSONObject();
+        for (Map.Entry<String, TimeInterval> e : context.entrySet()) {
+            condObj.put(e.getKey(), e.getValue().toString(true));
+        }
+        return condObj.toString();
+    }
+
+    public static HashMap<String, TimeInterval> ContextFromJSON(String json) {
+        HashMap<String, TimeInterval> context = new HashMap<>();
+        JSONObject obj = new JSONObject(json);
+
+        Iterator<String> itr = obj.keys();
+        while (itr.hasNext()) {
+            String name = itr.next();
+            context.put(name, new TimeInterval(obj.getString(name)));
+        }
+
+        return context;
+    }
+
+    public static String ThresholdToJSON(ADOPTBehaviour.Threshold t) {
+        JSONObject condObj = new JSONObject();
+        for (Map.Entry<String, TimeInterval> e : t.context.entrySet()) {
+            condObj.put(e.getKey(), e.getValue().toString(true));
+        }
+
+        JSONObject obj = new JSONObject()
+                .put("t", t.t)
+                .put("context", condObj);
+
+        return obj.toString();
+    }
+
+    public static ADOPTBehaviour.Threshold ThresholdFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+
+        ADOPTBehaviour.Threshold t = new ADOPTBehaviour.Threshold();
+
+        t.t = obj.getInt("t");
+        t.context = new HashMap<>();
+        JSONObject contextObj = obj.getJSONObject("context");
+        Iterator<String> itr = contextObj.keys();
+        while (itr.hasNext()) {
+            String name = itr.next();
+            t.context.put(name, new TimeInterval(contextObj.getString(name)));
+        }
+
+        return t;
+    }
+
+    public static String ValueToJSON(ADOPTBehaviour.Value v) {
+        JSONObject obj = new JSONObject()
+                .put("sender", v.sender)
+                .put("value", v.chosenValue.toString(true));
+
+        return obj.toString();
+    }
+
+    public static ADOPTBehaviour.Value ValueFromJSON(String json) {
+        JSONObject obj = new JSONObject(json);
+        ADOPTBehaviour.Value v = new ADOPTBehaviour.Value();
+        v.sender = obj.getString("sender");
+        v.chosenValue = new TimeInterval(obj.getString("value"));
+
+        return v;
+    }
+
     public static String CostToJSON(ADOPTBehaviour.Cost c) {
         JSONObject condObj = new JSONObject();
         for (Map.Entry<String, TimeInterval> e : c.context.entrySet()) {

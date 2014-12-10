@@ -176,4 +176,64 @@ public class SerializerTest {
         assertEquals(t1, cost2.context.get("Agent1@192.168.23.52:1099/JADE-Swimming"));
         assertEquals(t2, cost2.context.get("Agent2@192.168.23.52:1099/JADE-Dancing"));
     }
+
+    @Test
+    public void testValueJSON() {
+        ADOPTBehaviour.Value value = new ADOPTBehaviour.Value();
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+        TimeInterval t1 = new TimeInterval(c1, c2);
+        value.sender = "Agent1@192.168.23.52:1099/JADE-Dancing";
+        value.chosenValue = t1;
+
+        String json = Serializer.ValueToJSON(value);
+
+        ADOPTBehaviour.Value value2 = Serializer.ValueFromJSON(json);
+
+        assertEquals(value.sender, value2.sender);
+        assertEquals(value.chosenValue, value2.chosenValue);
+    }
+
+    @Test
+    public void testThresholdJSON() {
+        ADOPTBehaviour.Threshold t = new ADOPTBehaviour.Threshold();
+
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+        Calendar c3 = Calendar.getInstance(); c3.set(2004, Calendar.JANUARY, 31, 18, 35);
+        TimeInterval t1 = new TimeInterval(c1, c2);
+        TimeInterval t2 = new TimeInterval(c2, c3);
+
+        t.t= 2345;
+        t.context = new HashMap<>();
+        t.context.put("Agent1@192.168.23.52:1099/JADE-Swimming", t1);
+        t.context.put("Agent2@192.168.23.52:1099/JADE-Dancing", t2);
+
+        String json = Serializer.ThresholdToJSON(t);
+
+        ADOPTBehaviour.Threshold thr2 = Serializer.ThresholdFromJSON(json);
+        assertEquals(thr2.t, thr2.t);
+        assertEquals(t1, t.context.get("Agent1@192.168.23.52:1099/JADE-Swimming"));
+        assertEquals(t2, t.context.get("Agent2@192.168.23.52:1099/JADE-Dancing"));
+    }
+
+    @Test
+    public void testContextJSON() {
+        Calendar c1 = Calendar.getInstance(); c1.set(2004, Calendar.JANUARY, 30, 18, 30);
+        Calendar c2 = Calendar.getInstance(); c2.set(2004, Calendar.JANUARY, 30, 18, 51);
+        Calendar c3 = Calendar.getInstance(); c3.set(2004, Calendar.JANUARY, 31, 18, 35);
+        TimeInterval t1 = new TimeInterval(c1, c2);
+        TimeInterval t2 = new TimeInterval(c2, c3);
+
+        HashMap<String, TimeInterval> context = new HashMap<>();
+        context.put("Agent1@192.168.23.52:1099/JADE-Swimming", t1);
+        context.put("Agent2@192.168.23.52:1099/JADE-Dancing", t2);
+
+        String json = Serializer.ContextToJSON(context);
+
+        HashMap<String, TimeInterval> context2 = Serializer.ContextFromJSON(json);
+
+        assertEquals(t1, context2.get("Agent1@192.168.23.52:1099/JADE-Swimming"));
+        assertEquals(t2, context2.get("Agent2@192.168.23.52:1099/JADE-Dancing"));
+    }
 }

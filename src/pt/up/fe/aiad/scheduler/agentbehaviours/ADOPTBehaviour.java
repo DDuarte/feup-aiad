@@ -9,10 +9,7 @@ import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.Serializer;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class ADOPTBehaviour extends SimpleBehaviour {
@@ -27,6 +24,16 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         public HashMap<String, TimeInterval> context;
         public int lb;
         public int ub;
+    }
+
+    public static class Value {
+        public String sender;
+        public TimeInterval chosenValue;
+    }
+
+    public static class Threshold {
+        public int t;
+        public HashMap<String, TimeInterval> context;
     }
 
     public static class VirtualAgent {
@@ -283,17 +290,79 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         private void sendValue() {
-            //TODO
             //  SEND (VALUE, (xi, di)) to each lower priority neighbor
+            Value value = new Value();
+            value.sender = _masterAgent.getName()+"-"+_event.getName();
+            value.chosenValue = di;
+            String json = Serializer.ValueToJSON(value);
+
+            HashMap<String, TreeSet<String>> eventTypesToAgents = new HashMap<>();
+            for (String xl : _children) {
+                String[] strs = xl.split("-",2);
+                if (eventTypesToAgents.keySet().contains(strs[1])) {
+                    eventTypesToAgents.get(strs[1]).add(strs[0]);
+                }
+                else {
+                    TreeSet<String> ags = new TreeSet<>(); ags.add(strs[0]);
+                    eventTypesToAgents.put(strs[1], ags);
+                }
+            }
+            for (String xl : _pseudoChildren) {
+                String[] strs = xl.split("-",2);
+                if (eventTypesToAgents.keySet().contains(strs[1])) {
+                    eventTypesToAgents.get(strs[1]).add(strs[0]);
+                }
+                else {
+                    TreeSet<String> ags = new TreeSet<>(); ags.add(strs[0]);
+                    eventTypesToAgents.put(strs[1], ags);
+                }
+            }
+
+            for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
+                ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+                for (String ag : ea.getValue()) {
+                    msg.addReceiver(new AID(ag, true));
+                }
+                msg.setContent("VALUE-" + ea.getKey() + "-" + json);
+                msg.setConversationId("ADOPT");
+                _masterAgent.send(msg);
+            }
+
         }
 
         private void sendTerminate() {
-            //TODO
             // (48) SEND (TERMINATE,CurrentContext ∪ {(xidi)}) to each child
+            HashMap<String, TimeInterval> context = new HashMap<>(CurrentContext);
+            context.put(_masterAgent.getName()+"-"+_event.getName(), di);
+            String json = Serializer.ContextToJSON(context);
+
+            HashMap<String, TreeSet<String>> eventTypesToAgents = new HashMap<>();
+            for (String xl : _children) {
+                String[] strs = xl.split("-",2);
+                if (eventTypesToAgents.keySet().contains(strs[1])) {
+                    eventTypesToAgents.get(strs[1]).add(strs[0]);
+                }
+                else {
+                    TreeSet<String> ags = new TreeSet<>(); ags.add(strs[0]);
+                    eventTypesToAgents.put(strs[1], ags);
+                }
+            }
+
+            for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
+                ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
+                for (String ag : ea.getValue()) {
+                    msg.addReceiver(new AID(ag, true));
+                }
+                msg.setContent("TERMINATE-" + ea.getKey() + "-" + json);
+                msg.setConversationId("ADOPT");
+                _masterAgent.send(msg);
+            }
         }
 
         private void sendCost() {
             //  SEND (COST, xi, CurrentContext, LB,UB) to parent
+            if (_parentX == null) //root
+                return;
             Cost cost = new Cost();
             cost.sender = _masterAgent.getName()+"-"+_event.getName();
             cost.context = CurrentContext;
@@ -301,7 +370,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             cost.ub = UB();
 
             String json = Serializer.CostToJSON(cost);
-            ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
+            ACLMessage msg = new ACLMessage(ACLMessage.CONFIRM);
             String[] strs = _parentX.split("-", 2);
             msg.addReceiver(new AID(strs[0], true));
             msg.setContent("COST-" + strs[1] + "-" + json);
@@ -310,8 +379,20 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         private void sendThreshold() {
-            //TODO
             //SEND (THRESHOLD, t(di, xl), CurrentContext ) to each child xl
+            for (String xl : _children) {
+                Threshold thresh = new Threshold();
+                thresh.context = CurrentContext;
+                thresh.t = t.get(di).get(xl);
+
+                String json = Serializer.ThresholdToJSON(thresh);
+                ACLMessage msg = new ACLMessage(ACLMessage.PROPAGATE);
+                String[] strs = xl.split("-", 2);
+                msg.addReceiver(new AID(strs[0], true));
+                msg.setContent("THRESHOLD-" + strs[1] + "-" + json);
+                msg.setConversationId("ADOPT");
+                _masterAgent.send(msg);
+            }
         }
 
         public void receiveCost(Cost cost) {
@@ -336,13 +417,47 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 }
             }
 
-            if (compatibleContexts(cost.context, CurrentContext)) {
+            if (d != null && compatibleContexts(cost.context, CurrentContext)) {
                 lb.get(d).put(cost.sender, cost.lb);
                 ub.get(d).put(cost.sender, cost.ub);
                 context.get(d).put(cost.sender, cost.context);
                 maintainChildThresholdInvariant();
                 maintainThresholdInvariant();
             }
+            backTrack();
+        }
+
+        public void receiveValue(Value value) {
+            if (!_receivedTerminateFromParent) {
+                CurrentContext.put(value.sender, value.chosenValue);
+                for (TimeInterval d : _event._possibleSolutions) {
+                    for (String xl : _children) {
+                        if (!compatibleContexts(context.get(d).get(xl), CurrentContext)) {
+                            lb.get(d).put(xl,0);
+                            t.get(d).put(xl,0);
+                            ub.get(d).put(xl,10000);
+                            context.get(d).put(xl,new HashMap<>());
+                        }
+                    }
+                }
+                maintainThresholdInvariant();
+                backTrack();
+            }
+        }
+
+        public void receiveThreshold(Threshold thresh) {
+            if (compatibleContexts(thresh.context, CurrentContext)) {
+                threshold = thresh.t;
+                maintainThresholdInvariant();
+                backTrack();
+            }
+        }
+
+        public void receiveTerminate(HashMap<String, TimeInterval> context) {
+            CurrentContext = context;
+            _receivedTerminateFromParent = true;
+            _isFinished = true;
+            _masterInstance.checkFinished();
             backTrack();
         }
 
@@ -402,6 +517,15 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 switch (strs[0]) {
                     case "COST":
                         _virtualAgents.get(strs[1]).receiveCost(Serializer.CostFromJSON(strs[2]));
+                        break;
+                    case "VALUE":
+                        _virtualAgents.get(strs[1]).receiveValue(Serializer.ValueFromJSON(strs[2]));
+                        break;
+                    case "THRESHOLD":
+                        _virtualAgents.get(strs[1]).receiveThreshold(Serializer.ThresholdFromJSON(strs[2]));
+                        break;
+                    case "TERMINATE":
+                        _virtualAgents.get(strs[1]).receiveTerminate(Serializer.ContextFromJSON(strs[2]));
                         break;
                     default:
                         System.err.println("Received an invalid message type.");
