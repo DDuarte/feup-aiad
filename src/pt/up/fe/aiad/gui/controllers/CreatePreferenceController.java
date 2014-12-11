@@ -38,9 +38,13 @@ public class CreatePreferenceController {
         _timeHoursChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
         _timeMinutesChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
         _timeDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
+        _timeBeforeRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
+        _timeAfterRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
 
         _hourHoursChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
         _hourMinutesChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
+        _hourBeforeRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
+        _hourAfterRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> validateConstraintData());
 
         ToggleGroup tg = new ToggleGroup();
         _timeAfterRadioButton.setToggleGroup(tg);
