@@ -18,6 +18,7 @@ import pt.up.fe.aiad.utils.StringUtils;
 
 import java.util.Random;
 
+@SuppressWarnings("deprecation")
 public class MainController {
 
     private static Random r = new Random();
