@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.Dialogs;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.utils.FXUtils;
 import pt.up.fe.aiad.utils.IPAddressValidator;
@@ -120,6 +121,14 @@ public class MainController {
 
         if (StringUtils.isNullOrEmpty(_nicknameTextField.getText()))
             return;
+
+        if (_nicknameTextField.getText().contains("-")) {
+            Dialogs.create()
+                    .title("Validation Error")
+                    .message("Event name cannot have character '-")
+                    .showError();
+            return;
+        }
 
         if (!IPAddressValidator.validate(_addressTextField.getText(), true))
             return;

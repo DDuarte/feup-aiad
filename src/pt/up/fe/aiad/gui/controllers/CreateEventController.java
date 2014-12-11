@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.controlsfx.dialog.Dialogs;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.utils.FXUtils;
@@ -17,6 +18,7 @@ import java.util.Calendar;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("deprecation")
 public class CreateEventController {
 
     @FXML
@@ -86,6 +88,15 @@ public class CreateEventController {
 
         if (StringUtils.isNullOrEmpty(_eventName.getText()))
             return;
+
+        if (_eventName.getText().contains("-")) {
+            Dialogs.create()
+                    .title("Validation Error")
+                    .message("Event name cannot have character '-")
+                    .showError();
+            return;
+        }
+
         if (StringUtils.isNullOrEmpty(_hours.getText()))
             return;
         if (_eventName.getText().length() > 64)
@@ -99,7 +110,6 @@ public class CreateEventController {
 
         if (val < 0 || val + _minutes.getValue() <= 0)
             return;
-
 
         LocalDate minLd = _minDate.getValue();
         if (minLd == null)
