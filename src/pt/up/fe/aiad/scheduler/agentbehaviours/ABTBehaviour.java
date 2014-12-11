@@ -7,9 +7,13 @@ import jade.lang.acl.MessageTemplate;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.Serializer;
+import pt.up.fe.aiad.scheduler.Statistics;
 import pt.up.fe.aiad.utils.TimeInterval;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class ABTBehaviour extends SimpleBehaviour {
 
@@ -25,10 +29,14 @@ public class ABTBehaviour extends SimpleBehaviour {
         private boolean isFinished = false;
         private ABTBehaviour _masterInstance;
 
+        public Statistics Stats = new Statistics();
+
         public VirtualAgent(ScheduleEvent event, SchedulerAgent agent, ABTBehaviour masterInstance) {
             _masterInstance = masterInstance;
             _event = event;
             _masterAgent = agent;
+
+            Stats.setVariableName(_masterAgent.getLocalName() + "-" + _event.getName());
 
             self.x = new Variable();
             self.x.agent = _masterAgent.getAID().getName();
@@ -147,6 +155,8 @@ public class ABTBehaviour extends SimpleBehaviour {
             msg.setContent("NOGOOD-" + _event.getName() + "-" + json);
             msg.setConversationId("ABT");
             _masterAgent.send(msg);
+
+            Stats.sentMessage("NOGOOD");
         }
 
         private void sendOk(String agent, Variable x) {
@@ -157,6 +167,8 @@ public class ABTBehaviour extends SimpleBehaviour {
             msg.setContent("OK?-" + _event.getName() + "-" + json);
             msg.setConversationId("ABT");
             _masterAgent.send(msg);
+
+            Stats.sentMessage("OK?");
         }
 
         private void sendAddLink(String agent, Variable x) {
@@ -167,12 +179,15 @@ public class ABTBehaviour extends SimpleBehaviour {
             msg.setContent("LINK-" + _event.getName() + "-" + json);
             msg.setConversationId("ABT");
             _masterAgent.send(msg);
+
+            Stats.sentMessage("LINK");
         }
 
         private void sendTerminate(int cost) {
             ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
             for (String agent : self.lower_agents) {
                 msg.addReceiver(new AID(agent, true));
+                Stats.sentMessage("TERM");
             }
             msg.setContent("TERM-" + _event.getName() + "-" + cost);
             msg.setConversationId("ABT");
@@ -290,15 +305,19 @@ public class ABTBehaviour extends SimpleBehaviour {
                 switch (strs[0]) {
                     case "OK?":
                         _agents.get(strs[1]).receiveOk(Serializer.VariableFromJSON(strs[2]));
+                        _agents.get(strs[1]).Stats.receivedMessage("OK?");
                         break;
                     case "NOGOOD":
                         _agents.get(strs[1]).receiveNoGood(Serializer.NoGoodFromJSON(strs[2]));
+                        _agents.get(strs[1]).Stats.receivedMessage("NOGOOD");
                         break;
                     case "LINK":
                         _agents.get(strs[1]).receiveAddLink(Serializer.VariableFromJSON(strs[2]));
+                        _agents.get(strs[1]).Stats.receivedMessage("LINK");
                         break;
                     case "TERM":
                         _agents.get(strs[1]).receiveTerminate(Integer.parseInt(strs[2]));
+                        _agents.get(strs[1]).Stats.receivedMessage("TERM");
                         break;
                     default:
                         System.err.println("Received an invalid message type.");

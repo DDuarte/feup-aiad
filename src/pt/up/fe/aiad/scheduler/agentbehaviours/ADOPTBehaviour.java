@@ -7,6 +7,7 @@ import jade.lang.acl.MessageTemplate;
 import pt.up.fe.aiad.scheduler.ScheduleEvent;
 import pt.up.fe.aiad.scheduler.SchedulerAgent;
 import pt.up.fe.aiad.scheduler.Serializer;
+import pt.up.fe.aiad.scheduler.Statistics;
 import pt.up.fe.aiad.utils.TimeInterval;
 
 import java.util.*;
@@ -38,8 +39,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
 
     public static class VirtualAgent {
 
-        private int _receivedMessages;
-        private int _sentMessages;
         ScheduleEvent _event;
         SchedulerAgent _masterAgent;
         private final ADOPTBehaviour _masterInstance;
@@ -61,12 +60,16 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         HashMap<TimeInterval, HashMap<String, Integer>> t;
         HashMap<TimeInterval, HashMap<String, HashMap<String, TimeInterval>>> context; // D -> child -> context (agent -> timeInterval)
 
+        Statistics Stats = new Statistics();
+
         public VirtualAgent(ScheduleEvent scheduleEvent, SchedulerAgent schedulerAgent, ADOPTBehaviour masterInstance,
                             DFSBehaviour.VirtualAgent va, String leader) {
             _event = scheduleEvent;
             _masterAgent = schedulerAgent;
             _masterInstance = masterInstance;
             _agents = _masterInstance._virtualAgents;
+
+            Stats.setVariableName(_masterAgent.getLocalName() + "-" + _event.getName());
 
             _leader = leader;
             _parentX = va._parentX;
@@ -113,13 +116,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                     break;
                 }
             }
-
-            /*System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
-            */
 
             //backTrack();
             chooseDiForMinLB();
@@ -172,6 +168,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             }
             return totalLB;
         }
+
         int UB() {
             int totalUB = Integer.MAX_VALUE;
             for (TimeInterval d : _event._possibleSolutions) {
@@ -185,13 +182,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         void backTrack() {
-            /*System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): leader: " + _leader);
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): parent: " + _parentX);
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): children: " +  Arrays.toString(_children.toArray()));
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pchildren: " +  Arrays.toString(_pseudoChildren.toArray()));
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): pparent: " + Arrays.toString(_pseudoParents.toArray()));
-            System.err.println("ADOPT(" + _masterAgent.getLocalName() + "-" + _event.getName() + "): my Di is : " + di.toString() + " with cost " + delta(di));
-            */
             int tempUB = UB();
             if (threshold == tempUB) {
                 chooseDiForMinUB();
@@ -199,11 +189,9 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             else if (LB(di) > threshold) {
                 chooseDiForMinLB();
             }
-            //ENDIF
-            //SEND (VALUE, (xi, di /* globals*/)) to each lower priority neighbor
+
             sendValue();
             maintainAllocationInvariant();
-
 
             if (threshold == tempUB) {
                 if (_receivedTerminateFromParent || _leader.equals(_masterAgent.getName()+ "-" + _event.getName())) {
@@ -230,6 +218,7 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                     break;
             }
         }
+
         private void chooseDiForMinLB() {
             int currentLB = LB(di);
             for (TimeInterval d : _event._possibleSolutions) {
@@ -328,8 +317,8 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
                 ACLMessage msg = new ACLMessage(ACLMessage.PROPOSE);
                 for (String ag : ea.getValue()) {
-                    _sentMessages++;
                     msg.addReceiver(new AID(ag, true));
+                    Stats.sentMessage("VALUE");
                 }
                 msg.setContent("VALUE-" + ea.getKey() + "-" + json);
                 msg.setConversationId("ADOPT");
@@ -359,19 +348,16 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             for (Map.Entry<String, TreeSet<String>> ea : eventTypesToAgents.entrySet()) {
                 ACLMessage msg = new ACLMessage(ACLMessage.CANCEL);
                 for (String ag : ea.getValue()) {
-                    _sentMessages++;
                     msg.addReceiver(new AID(ag, true));
+                    Stats.sentMessage("TERMINATE");
                 }
                 msg.setContent("TERMINATE-" + ea.getKey() + "-" + json);
                 msg.setConversationId("ADOPT");
                 _masterAgent.send(msg);
             }
-
-            System.err.println(_masterAgent.getName()+"-"+_event.getName()+" terminating after receiving " + _receivedMessages + " messages and sending " + _sentMessages);
         }
 
         private void sendCost() {
-            _sentMessages++;
             //  SEND (COST, xi, CurrentContext, LB,UB) to parent
             if (_parentX == null) //root
                 return;
@@ -388,13 +374,12 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             msg.setContent("COST-" + strs[1] + "-" + json);
             msg.setConversationId("ADOPT");
             _masterAgent.send(msg);
+            Stats.sentMessage("COST");
         }
 
         private void sendThreshold() {
             //SEND (THRESHOLD, t(di, xl), CurrentContext ) to each child xl
             for (String xl : _children) {
-                _sentMessages++;
-
                 Threshold thresh = new Threshold();
                 thresh.context = CurrentContext;
                 thresh.t = t.get(di).get(xl);
@@ -406,11 +391,11 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 msg.setContent("THRESHOLD-" + strs[1] + "-" + json);
                 msg.setConversationId("ADOPT");
                 _masterAgent.send(msg);
+                Stats.sentMessage("THRESHOLD");
             }
         }
 
         public void receiveCost(Cost cost) {
-            _receivedMessages++;
             String thisName = _masterAgent.getName()+"-"+_event.getName();
             TimeInterval d = cost.context.get(thisName);
             cost.context.remove(thisName);
@@ -443,7 +428,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveValue(Value value) {
-            _receivedMessages++;
             if (!_receivedTerminateFromParent) {
                 CurrentContext.put(value.sender, value.chosenValue);
                 for (TimeInterval d : _event._possibleSolutions) {
@@ -462,7 +446,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveThreshold(Threshold thresh) {
-            _receivedMessages++;
             if (compatibleContexts(thresh.context, CurrentContext)) {
                 threshold = thresh.t;
                 maintainThresholdInvariant();
@@ -471,7 +454,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
         }
 
         public void receiveTerminate(HashMap<String, TimeInterval> context) {
-            _receivedMessages++;
             CurrentContext = context;
             _receivedTerminateFromParent = true;
             backTrack();
@@ -487,8 +469,6 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             return true;
         }
     }
-
-
 
     private String _leader;
     private HashMap<String, DFSBehaviour.VirtualAgent> _agentsDFS;
@@ -532,20 +512,28 @@ public class ADOPTBehaviour extends SimpleBehaviour {
                 String[] strs = str.split("-", 3);
                 switch (strs[0]) {
                     case "COST":
-                        if (!_virtualAgents.get(strs[1])._isFinished)
+                        if (!_virtualAgents.get(strs[1])._isFinished) {
                             _virtualAgents.get(strs[1]).receiveCost(Serializer.CostFromJSON(strs[2]));
+                            _virtualAgents.get(strs[1]).Stats.receivedMessage("COST");
+                        }
                         break;
                     case "VALUE":
-                        if (!_virtualAgents.get(strs[1])._isFinished)
+                        if (!_virtualAgents.get(strs[1])._isFinished) {
                             _virtualAgents.get(strs[1]).receiveValue(Serializer.ValueFromJSON(strs[2]));
+                            _virtualAgents.get(strs[1]).Stats.receivedMessage("VALUE");
+                        }
                         break;
                     case "THRESHOLD":
-                        if (!_virtualAgents.get(strs[1])._isFinished)
+                        if (!_virtualAgents.get(strs[1])._isFinished) {
                             _virtualAgents.get(strs[1]).receiveThreshold(Serializer.ThresholdFromJSON(strs[2]));
+                            _virtualAgents.get(strs[1]).Stats.receivedMessage("THRESHOLD");
+                        }
                         break;
                     case "TERMINATE":
-                        if (!_virtualAgents.get(strs[1])._isFinished)
+                        if (!_virtualAgents.get(strs[1])._isFinished) {
                             _virtualAgents.get(strs[1]).receiveTerminate(Serializer.ContextFromJSON(strs[2]));
+                            _virtualAgents.get(strs[1]).Stats.receivedMessage("TERMINATE");
+                        }
                         break;
                     default:
                         //System.err.println("Received an invalid message type: " + strs[0]);
