@@ -334,6 +334,13 @@ public class ABTBehaviour extends SimpleBehaviour {
 
     @Override
     public boolean done() {
+        if (allFinished) {
+            int sent = 0;
+            for (VirtualAgent va : _agents.values()) {
+                sent += va.Stats.getTotalSentMessages();
+            }
+            System.err.println(_agent.getName() + " terminating with " + sent + " messages sent.");
+        }
         return allFinished;
     }
 }

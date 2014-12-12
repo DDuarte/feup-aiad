@@ -120,6 +120,12 @@ public class ADOPTBehaviour extends SimpleBehaviour {
             //backTrack();
             chooseDiForMinLB();
             sendValue();
+            if (_parentX == null && _children.isEmpty()) {
+                _isFinished = true;
+                _event._currentInterval = di;
+                _event._currentCost = LB(di);
+                _masterInstance.checkFinished();
+            }
         }
 
         int delta(TimeInterval v) {
@@ -551,6 +557,11 @@ public class ADOPTBehaviour extends SimpleBehaviour {
     @Override
     public boolean done() {
         if (allFinished) {
+            int sent = 0;
+            for (VirtualAgent va : _virtualAgents.values()) {
+                sent += va.Stats.getTotalSentMessages();
+            }
+            System.err.println(_agent.getName() + " terminating with " + sent + " messages sent.");
             _agent.finishedAlgorithm();
         }
         return allFinished;

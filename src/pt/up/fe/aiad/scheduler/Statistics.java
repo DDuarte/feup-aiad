@@ -29,6 +29,13 @@ public class Statistics {
         return sb.toString();
     }
 
+    public int getTotalSentMessages() {
+        int c = 0;
+        for (Integer i: _receivedMessages.values())
+            c += i;
+        return c;
+    }
+
     public int getSentMessages(String messageType) {
         return _sentMessages.getOrDefault(messageType, 0);
     }

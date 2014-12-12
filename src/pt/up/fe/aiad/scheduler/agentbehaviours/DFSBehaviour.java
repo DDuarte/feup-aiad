@@ -56,10 +56,15 @@ public class DFSBehaviour extends SimpleBehaviour {
 
             _openX.addAll(_neighbours);
             if (thisName.equals(_masterInstance._leader)) {
-                String n = _openX.first();
-                _openX.remove(n);
-                _children.add(n);
-                sendChild(n);
+                if (!_openX.isEmpty()) {
+                    String n = _openX.first();
+                    _openX.remove(n);
+                    _children.add(n);
+                    sendChild(n);
+                }
+                else {
+                    _finished = true;
+                }
             }
         }
 
