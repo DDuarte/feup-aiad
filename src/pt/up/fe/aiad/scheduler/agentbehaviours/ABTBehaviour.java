@@ -17,7 +17,7 @@ import java.util.TreeSet;
 
 public class ABTBehaviour extends SimpleBehaviour {
 
-    private boolean allFinished = false;
+    public boolean allFinished = false;
     private SchedulerAgent _agent;
 
     private HashMap<String, VirtualAgent> _agents = new HashMap<>();
@@ -35,6 +35,8 @@ public class ABTBehaviour extends SimpleBehaviour {
             _masterInstance = masterInstance;
             _event = event;
             _masterAgent = agent;
+
+            _masterInstance.allFinished = false;
 
             Stats.setVariableName(_masterAgent.getLocalName() + "-" + _event.getName());
 
