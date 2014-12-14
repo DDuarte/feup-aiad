@@ -55,6 +55,8 @@ public class CreateAvailabilityController {
         FXUtils.initializeHourChoiceBox(_maxHours);
         FXUtils.initializeMinuteChoiceBox(_minMinutes);
         FXUtils.initializeMinuteChoiceBox(_maxMinutes);
+        FXUtils.initializeDateChoiceBox(_minDate);
+        FXUtils.initializeDateChoiceBox(_maxDate);
 
         _maxBounds = maxBounds;
 

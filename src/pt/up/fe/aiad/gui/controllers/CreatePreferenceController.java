@@ -56,6 +56,7 @@ public class CreatePreferenceController {
         FXUtils.initializeHourChoiceBox(_hourHoursChoiceBox);
         FXUtils.initializeMinuteChoiceBox(_timeMinutesChoiceBox);
         FXUtils.initializeMinuteChoiceBox(_hourMinutesChoiceBox);
+        FXUtils.initializeDateChoiceBox(_timeDatePicker);
 
         _saveButton.setDisable(true);
     }
