@@ -39,15 +39,6 @@ public class ScheduleEvent {
         maxBounds = maxInterval;
     }
 
-    public ScheduleEvent(String name, long duration, TreeSet<AID> participants, ArrayList<TimeInterval> domain, ArrayList<ScheduleConstraint> constraints) {
-        _name = name;
-        _duration = duration;
-        _participants = participants;
-        _availableIntervals = domain;
-        _constraints = constraints;
-        _initialized = true;
-    }
-
     public void initialize(ArrayList<TimeInterval> domain, ArrayList<ScheduleConstraint> constraints) {
         _availableIntervals = domain;
         _constraints = constraints;

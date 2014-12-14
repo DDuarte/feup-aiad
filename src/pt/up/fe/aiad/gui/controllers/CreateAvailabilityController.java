@@ -79,7 +79,7 @@ public class CreateAvailabilityController {
             return;
         }
 
-        if (_maxBounds.getStartDate() > ti.getStartDate() || _maxBounds.getEndDate() < ti.getEndDate())
+        if (_maxBounds != null && (_maxBounds.getStartDate() > ti.getStartDate() || _maxBounds.getEndDate() < ti.getEndDate()))
             return;
 
         if (!ti.fits(_eventDuration))
