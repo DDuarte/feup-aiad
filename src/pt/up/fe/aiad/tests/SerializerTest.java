@@ -76,7 +76,7 @@ public class SerializerTest {
 
     @Test
     public void testEventProposalJSON() {
-        AID agent1 = new AID("test1", true);
+        AID agent1 = new AID("tést1", true);
         AID agent2 = new AID("test2", true);
         AID agent3 = new AID("test3", true);
         AID agent4 = new AID("test4", true);
@@ -160,10 +160,10 @@ public class SerializerTest {
         TimeInterval t1 = new TimeInterval(c1, c2);
         TimeInterval t2 = new TimeInterval(c2, c3);
 
-        cost.sender= "Agent1@192.168.23.52:1099/JADE-Dancing";
+        cost.sender= "Agent1@192.168.23.52:1099/JADE-Dãncing";
         cost.context = new HashMap<>();
         cost.context.put("Agent1@192.168.23.52:1099/JADE-Swimming", t1);
-        cost.context.put("Agent2@192.168.23.52:1099/JADE-Dancing", t2);
+        cost.context.put("Agent2@192.168.23.52:1099/JADE-Dãncing", t2);
         cost.lb = 3;
         cost.ub = 400;
 
@@ -174,7 +174,7 @@ public class SerializerTest {
         assertEquals(cost.lb, cost2.lb);
         assertEquals(cost.ub, cost2.ub);
         assertEquals(t1, cost2.context.get("Agent1@192.168.23.52:1099/JADE-Swimming"));
-        assertEquals(t2, cost2.context.get("Agent2@192.168.23.52:1099/JADE-Dancing"));
+        assertEquals(t2, cost2.context.get("Agent2@192.168.23.52:1099/JADE-Dãncing"));
     }
 
     @Test
